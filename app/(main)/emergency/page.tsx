@@ -6,23 +6,24 @@ import {
   getContacts,
   updateContactAction,
 } from '@/actions/contact.actions';
-import { deleteFileAction, getFiles, getSignedUrl, updateFileAction } from '@/actions/file.actions';
+import { deleteFileAction, getFiles, getSignedUrls, updateFileAction } from '@/actions/file.actions';
 import { ContactList } from '@/components/emergency/ContactList';
 import { FileList } from '@/components/service/FileList';
 import { FileUploadForm } from '@/components/service/FileUploadForm';
 
 export default async function EmergencyPage() {
-  const session = await getServerSession(authOptions);
+  const [session, contacts, emergencyRaw] = await Promise.all([
+    getServerSession(authOptions),
+    getContacts(),
+    getFiles('emergency'),
+  ]);
   const isAdmin = session?.user.role === 'ADMIN';
 
-  const contacts = await getContacts();
-  const emergencyRaw = await getFiles('emergency');
-  const emergencyFiles = await Promise.all(
-    emergencyRaw.map(async (file) => ({
-      ...file,
-      signedUrl: await getSignedUrl(file.storagePath),
-    })),
-  );
+  const signedUrls = await getSignedUrls(emergencyRaw.map((file) => file.storagePath));
+  const emergencyFiles = emergencyRaw.map((file) => ({
+    ...file,
+    signedUrl: signedUrls[file.storagePath] ?? '#',
+  }));
 
   return (
     <section className="space-y-5">

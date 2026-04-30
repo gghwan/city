@@ -158,6 +158,41 @@ export async function getSignedUrl(storagePath: string): Promise<string> {
   return data.signedUrl;
 }
 
+export async function getSignedUrls(storagePaths: string[]): Promise<Record<string, string>> {
+  const result: Record<string, string> = {};
+  const uniquePaths = Array.from(new Set(storagePaths.filter(Boolean)));
+  const remotePaths: string[] = [];
+
+  for (const storagePath of uniquePaths) {
+    if (storagePath.startsWith('http://') || storagePath.startsWith('https://')) {
+      result[storagePath] = storagePath;
+    } else {
+      remotePaths.push(storagePath);
+      result[storagePath] = '#';
+    }
+  }
+
+  if (remotePaths.length === 0) {
+    return result;
+  }
+
+  if (!isSupabaseConfigured || !supabaseAdmin) {
+    return result;
+  }
+
+  const { data, error } = await supabaseAdmin.storage.from(storageBucket).createSignedUrls(remotePaths, 60 * 15);
+  if (error || !data) {
+    return result;
+  }
+
+  for (const entry of data as Array<{ path?: string; signedUrl?: string }>) {
+    if (!entry.path) continue;
+    result[entry.path] = entry.signedUrl ?? '#';
+  }
+
+  return result;
+}
+
 export async function getFiles(type: 'service' | 'emergency'): Promise<FileItem[]> {
   const prismaType = fileTypeToPrisma(type);
 

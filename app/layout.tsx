@@ -7,6 +7,10 @@ export const metadata: Metadata = {
   title: APP_NAME,
   description: '서울풍납 회중 2026 대도시 캠페인 운영 웹앱',
   manifest: '/manifest.json',
+  icons: {
+    icon: '/icons/icon.svg',
+    shortcut: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
