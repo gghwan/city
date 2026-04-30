@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth.config';
 import { chatRateLimiter } from '@/lib/rate-limiter';
 import { SYSTEM_PROMPT } from '@/lib/constants';
+import { getMenuGuideResponse } from '@/lib/chat-menu-guide';
 
 function toFallbackStream(message: string) {
   const encoder = new TextEncoder();
@@ -35,8 +36,15 @@ export async function POST(request: Request) {
     .filter((msg) => msg && (msg.role === 'user' || msg.role === 'assistant'))
     .map((msg) => ({ role: msg.role, content: msg.content }));
 
+  const latestUserMessage = [...(payload.messages ?? [])]
+    .reverse()
+    .find((message) => message.role === 'user')?.content;
+  const menuGuideFallback = latestUserMessage ? getMenuGuideResponse(latestUserMessage) : null;
+
   if (!process.env.GOOGLE_AI_API_KEY) {
-    return new Response(toFallbackStream('Google AI API 키가 설정되지 않았습니다. 담당자에게 문의하세요.'), {
+    const fallbackText =
+      menuGuideFallback ?? 'Google AI API 키가 설정되지 않았습니다. 담당자에게 문의하세요.';
+    return new Response(toFallbackStream(fallbackText), {
       headers: { 'Content-Type': 'text/plain; charset=utf-8' },
       status: 200,
     });
@@ -58,6 +66,11 @@ export async function POST(request: Request) {
 
     return result.toTextStreamResponse();
   } catch {
-    return new Response('AI 서비스를 일시적으로 사용할 수 없습니다.', { status: 503 });
+    const fallbackText =
+      menuGuideFallback ?? 'AI 서비스를 일시적으로 사용할 수 없습니다. 담당자에게 문의하세요.';
+    return new Response(toFallbackStream(fallbackText), {
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+      status: 200,
+    });
   }
 }
