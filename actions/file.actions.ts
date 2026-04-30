@@ -16,6 +16,27 @@ function fileTypeToPrisma(type: 'service' | 'emergency') {
   return type === 'service' ? FileType.SERVICE : FileType.EMERGENCY;
 }
 
+function decodeJwtPayload(token: string): Record<string, unknown> | null {
+  const parts = token.split('.');
+  if (parts.length !== 3) return null;
+  try {
+    const payload = parts[1];
+    const normalized = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const padded = normalized + '='.repeat((4 - (normalized.length % 4)) % 4);
+    return JSON.parse(Buffer.from(padded, 'base64').toString('utf8')) as Record<string, unknown>;
+  } catch {
+    return null;
+  }
+}
+
+function getSupabaseKeyRole() {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!key) return null;
+  const payload = decodeJwtPayload(key);
+  const role = payload?.role;
+  return typeof role === 'string' ? role : null;
+}
+
 const allowedExtensionSet = new Set(ALLOWED_UPLOAD_EXTENSIONS);
 
 const allowedMimeTypeSet = new Set([
@@ -256,22 +277,44 @@ export async function uploadFileAction(formData: FormData) {
     }
 
     if (file.size > MAX_UPLOAD_SIZE_BYTES) {
-      throw new AppError('E005', '파일 크기는 50MB를 초과할 수 없습니다.', 413);
+      throw new AppError('E005', '파일 크기는 4MB를 초과할 수 없습니다.', 413);
     }
 
     let storagePath = `local/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
 
     if (isSupabaseConfigured && supabaseAdmin) {
+      const keyRole = getSupabaseKeyRole();
+      if (keyRole === 'anon') {
+        throw new AppError(
+          'E009',
+          'SUPABASE_SERVICE_ROLE_KEY가 anon 키로 설정되어 업로드할 수 없습니다. service_role 키로 교체해주세요.',
+          503,
+        );
+      }
+
       const safeName = file.name.replace(/[^a-zA-Z0-9._-가-힣]/g, '-');
       storagePath = `${type.toLowerCase()}/${Date.now()}-${safeName}`;
 
-      const { error } = await supabaseAdmin.storage.from(storageBucket).upload(storagePath, Buffer.from(await file.arrayBuffer()), {
-        contentType: file.type || 'application/octet-stream',
-        upsert: false,
-      });
+      const { error } = await supabaseAdmin.storage
+        .from(storageBucket)
+        .upload(storagePath, Buffer.from(await file.arrayBuffer()), {
+          contentType: file.type || 'application/octet-stream',
+          upsert: false,
+        });
 
       if (error) {
-        throw new AppError('E009', '업로드에 실패했습니다. 잠시 후 다시 시도해주세요.', 500);
+        const message = String((error as { message?: unknown }).message ?? '').toLowerCase();
+        console.error('[uploadFileAction] Supabase upload error:', error);
+
+        if (message.includes('bucket') && message.includes('not found')) {
+          throw new AppError('E009', `스토리지 버킷(${storageBucket})을 찾을 수 없습니다.`, 500);
+        }
+
+        if (message.includes('permission') || message.includes('not authorized') || message.includes('forbidden')) {
+          throw new AppError('E003', '스토리지 권한이 없습니다. SERVICE_ROLE_KEY 또는 버킷 정책을 확인해주세요.', 403);
+        }
+
+        throw new AppError('E009', '업로드에 실패했습니다. 스토리지 설정을 확인해주세요.', 500);
       }
     }
 

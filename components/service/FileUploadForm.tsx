@@ -122,7 +122,7 @@ export function FileUploadForm({ type }: { type: 'SERVICE' | 'EMERGENCY' }) {
       >
         <CloudUpload className="mx-auto mb-2 h-6 w-6 text-primary" />
         <p className="text-sm font-semibold text-textBase">파일을 드래그해서 놓거나 클릭해서 선택하세요</p>
-        <p className="mt-1 text-xs text-textMuted">이미지, PDF, XML, DOCX, HWPX, PPTX 등 업로드 가능 (최대 50MB)</p>
+        <p className="mt-1 text-xs text-textMuted">이미지, PDF, XML, DOCX, HWPX, PPTX 등 업로드 가능 (최대 4MB)</p>
       </div>
 
       {selectedFile && (

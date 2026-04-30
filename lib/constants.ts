@@ -45,7 +45,7 @@ export const SUGGESTED_QUESTIONS = [
   '비상 연락 메뉴에서 할 수 있는 일은?',
 ] as const;
 
-export const MAX_UPLOAD_SIZE_BYTES = 50 * 1024 * 1024;
+export const MAX_UPLOAD_SIZE_BYTES = 4 * 1024 * 1024;
 
 export const ALLOWED_UPLOAD_EXTENSIONS = [
   'pdf',

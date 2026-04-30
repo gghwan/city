@@ -8,6 +8,8 @@ export async function POST(request: Request) {
     await uploadFileAction(formData);
     return NextResponse.json({ ok: true });
   } catch (error) {
+    console.error('[api/upload] upload failed:', error);
+
     if (error instanceof AppError) {
       return NextResponse.json({ ok: false, code: error.code, message: error.message }, { status: error.status });
     }
