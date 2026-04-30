@@ -74,6 +74,27 @@ function getFileExtension(filename: string) {
   return filename.slice(idx + 1).toLowerCase();
 }
 
+function stripFileExtension(filename: string) {
+  const idx = filename.lastIndexOf('.');
+  if (idx <= 0) return filename;
+  return filename.slice(0, idx);
+}
+
+function buildSafeStorageName(originalName: string) {
+  const extension = getFileExtension(originalName).replace(/[^a-z0-9]/gi, '').slice(0, 10);
+  const base = stripFileExtension(originalName)
+    .normalize('NFKD')
+    .replace(/[^\x00-\x7F]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g, '-')
+    .replace(/[-_.]{2,}/g, '-')
+    .replace(/^[-_.]+|[-_.]+$/g, '')
+    .slice(0, 80);
+
+  const safeBase = base || 'file';
+  return extension ? `${safeBase}.${extension}` : safeBase;
+}
+
 function isAllowedUploadFile(file: File) {
   const extension = getFileExtension(file.name);
   const mimeType = file.type.toLowerCase();
@@ -308,8 +329,9 @@ export async function uploadFileAction(formData: FormData) {
       );
     }
 
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-가-힣]/g, '-');
-    storagePath = `${type.toLowerCase()}/${Date.now()}-${safeName}`;
+    const safeName = buildSafeStorageName(file.name);
+    const randomSuffix = Math.random().toString(36).slice(2, 8);
+    storagePath = `${type.toLowerCase()}/${Date.now()}-${randomSuffix}-${safeName}`;
 
     const { error } = await supabaseAdmin.storage
       .from(storageBucket)
@@ -328,6 +350,10 @@ export async function uploadFileAction(formData: FormData) {
 
       if (message.includes('permission') || message.includes('not authorized') || message.includes('forbidden')) {
         throw new AppError('E003', '스토리지 권한이 없습니다. SECRET/SERVICE_ROLE_KEY 또는 버킷 정책을 확인해주세요.', 403);
+      }
+
+      if (message.includes('invalid key')) {
+        throw new AppError('E009', '파일명에 특수문자가 포함되어 업로드에 실패했습니다. 파일명을 바꿔 다시 시도해주세요.', 400);
       }
 
       throw new AppError('E009', '업로드에 실패했습니다. 스토리지 설정을 확인해주세요.', 500);
