@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth.config';
-import { deleteFileAction, getFiles, getSignedUrl, updateFileAction, uploadFileAction } from '@/actions/file.actions';
+import { deleteFileAction, getFiles, getSignedUrl, updateFileAction } from '@/actions/file.actions';
 import { FileList } from '@/components/service/FileList';
 import { FileUploadForm } from '@/components/service/FileUploadForm';
 
@@ -20,10 +20,10 @@ export default async function ServicePage() {
     <section className="space-y-4">
       <div>
         <h2 className="text-lg font-black text-textBase">봉사 마련</h2>
-        <p className="text-xs text-textMuted">업로드된 PDF 자료를 확인하세요.</p>
+        <p className="text-xs text-textMuted">업로드된 자료를 확인하세요.</p>
       </div>
 
-      {isAdmin && <FileUploadForm action={uploadFileAction} type="SERVICE" />}
+      {isAdmin && <FileUploadForm type="SERVICE" />}
       <FileList files={files} isAdmin={isAdmin} updateAction={updateFileAction} deleteAction={deleteFileAction} />
     </section>
   );

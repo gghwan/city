@@ -6,7 +6,7 @@ import {
   getContacts,
   updateContactAction,
 } from '@/actions/contact.actions';
-import { deleteFileAction, getFiles, getSignedUrl, updateFileAction, uploadFileAction } from '@/actions/file.actions';
+import { deleteFileAction, getFiles, getSignedUrl, updateFileAction } from '@/actions/file.actions';
 import { ContactList } from '@/components/emergency/ContactList';
 import { FileList } from '@/components/service/FileList';
 import { FileUploadForm } from '@/components/service/FileUploadForm';
@@ -70,8 +70,8 @@ export default async function EmergencyPage() {
       />
 
       <div className="space-y-2">
-        <h3 className="text-sm font-bold text-textBase">관련 PDF</h3>
-        {isAdmin && <FileUploadForm action={uploadFileAction} type="EMERGENCY" />}
+        <h3 className="text-sm font-bold text-textBase">관련 파일</h3>
+        {isAdmin && <FileUploadForm type="EMERGENCY" />}
         <FileList
           files={emergencyFiles}
           isAdmin={isAdmin}

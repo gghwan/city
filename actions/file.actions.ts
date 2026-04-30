@@ -9,11 +9,58 @@ import { createFileSchema, updateFileSchema, type CreateFileDto, type UpdateFile
 import { getMockState } from '@/lib/mock-db';
 import type { FileItem } from '@/types';
 import { isSupabaseConfigured, storageBucket, supabaseAdmin } from '@/lib/supabase';
-import { MAX_PDF_SIZE_BYTES } from '@/lib/constants';
+import { ALLOWED_UPLOAD_EXTENSIONS, MAX_UPLOAD_SIZE_BYTES } from '@/lib/constants';
 import { uploadRateLimiter } from '@/lib/rate-limiter';
 
 function fileTypeToPrisma(type: 'service' | 'emergency') {
   return type === 'service' ? FileType.SERVICE : FileType.EMERGENCY;
+}
+
+const allowedExtensionSet = new Set(ALLOWED_UPLOAD_EXTENSIONS);
+
+const allowedMimeTypeSet = new Set([
+  'application/pdf',
+  'application/xml',
+  'text/xml',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-powerpoint',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/x-hwp',
+  'application/haansofthwp',
+  'application/vnd.hancom.hwp',
+  'application/hwp+zip',
+  'application/haansofthwpx',
+  'application/vnd.hancom.hwpx',
+  'text/plain',
+  'text/csv',
+]);
+
+function getFileExtension(filename: string) {
+  const idx = filename.lastIndexOf('.');
+  if (idx < 0) return '';
+  return filename.slice(idx + 1).toLowerCase();
+}
+
+function isAllowedUploadFile(file: File) {
+  const extension = getFileExtension(file.name);
+  const mimeType = file.type.toLowerCase();
+
+  if (allowedExtensionSet.has(extension as (typeof ALLOWED_UPLOAD_EXTENSIONS)[number])) {
+    return true;
+  }
+
+  if (mimeType.startsWith('image/')) {
+    return true;
+  }
+
+  if (allowedMimeTypeSet.has(mimeType)) {
+    return true;
+  }
+
+  return false;
 }
 
 function mapToClient(record: {
@@ -195,7 +242,7 @@ export async function uploadFileAction(formData: FormData) {
     }
 
     if (!(file instanceof File)) {
-      throw new AppError('E007', 'PDF 파일을 선택해주세요.', 422);
+      throw new AppError('E007', '업로드할 파일을 선택해주세요.', 422);
     }
 
     const rateKey = session.user.username || 'upload';
@@ -204,12 +251,12 @@ export async function uploadFileAction(formData: FormData) {
       throw new AppError('E008', '잠시 후 다시 시도해주세요.', 429);
     }
 
-    if (file.type !== 'application/pdf') {
-      throw new AppError('E006', 'PDF 파일만 업로드 가능합니다.', 415);
+    if (!isAllowedUploadFile(file)) {
+      throw new AppError('E006', '이미지/PDF/XML 및 문서 파일(docx, hwpx, pptx 등)만 업로드 가능합니다.', 415);
     }
 
-    if (file.size > MAX_PDF_SIZE_BYTES) {
-      throw new AppError('E005', '파일 크기는 20MB를 초과할 수 없습니다.', 413);
+    if (file.size > MAX_UPLOAD_SIZE_BYTES) {
+      throw new AppError('E005', '파일 크기는 50MB를 초과할 수 없습니다.', 413);
     }
 
     let storagePath = `local/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
@@ -219,7 +266,7 @@ export async function uploadFileAction(formData: FormData) {
       storagePath = `${type.toLowerCase()}/${Date.now()}-${safeName}`;
 
       const { error } = await supabaseAdmin.storage.from(storageBucket).upload(storagePath, Buffer.from(await file.arrayBuffer()), {
-        contentType: 'application/pdf',
+        contentType: file.type || 'application/octet-stream',
         upsert: false,
       });
 
@@ -233,7 +280,7 @@ export async function uploadFileAction(formData: FormData) {
       name: name.trim(),
       description: typeof description === 'string' && description.trim() ? description.trim() : null,
       storagePath,
-      mimeType: 'application/pdf',
+      mimeType: file.type || 'application/octet-stream',
       sizeBytes: file.size,
     });
 

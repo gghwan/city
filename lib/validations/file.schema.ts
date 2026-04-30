@@ -5,7 +5,7 @@ export const createFileSchema = z.object({
   name: z.string().min(1, '파일명을 입력해주세요.').max(255),
   description: z.string().max(1000).optional().nullable(),
   storagePath: z.string().min(1),
-  mimeType: z.string().default('application/pdf'),
+  mimeType: z.string().default('application/octet-stream'),
   sizeBytes: z.number().int().positive().nullable().optional(),
 });
 
