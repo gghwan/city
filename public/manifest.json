@@ -1,0 +1,20 @@
+{
+  "name": "2026 대도시 캠페인ㅡ서울풍납 회중",
+  "short_name": "2026 캠페인",
+  "display": "standalone",
+  "background_color": "#f7f6f2",
+  "theme_color": "#01696f",
+  "start_url": "/dashboard",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

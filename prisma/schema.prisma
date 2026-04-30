@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id      Int      @id @default(autoincrement())
+  username String   @unique @db.VarChar(50)
+  password String   @db.VarChar(255)
+  role     Role     @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  uploadedFiles   File[]             @relation("UploadedBy")
+  createdContacts EmergencyContact[] @relation("CreatedBy")
+  updatedLinks    Link[]             @relation("UpdatedBy")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model File {
+  id          Int      @id @default(autoincrement())
+  type        FileType
+  name        String   @db.VarChar(255)
+  description String?  @db.Text
+  storagePath String   @db.VarChar(500)
+  mimeType    String   @default("application/pdf") @db.VarChar(100)
+  sizeBytes   BigInt?
+
+  uploadedBy Int?
+  uploader   User? @relation("UploadedBy", fields: [uploadedBy], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type])
+}
+
+enum FileType {
+  SERVICE
+  EMERGENCY
+}
+
+model EmergencyContact {
+  id        Int     @id @default(autoincrement())
+  name      String  @db.VarChar(100)
+  role      String  @db.VarChar(100)
+  phone     String  @db.VarChar(20)
+  note      String? @db.Text
+  sortOrder Int     @default(0)
+
+  createdBy Int?
+  creator   User? @relation("CreatedBy", fields: [createdBy], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sortOrder])
+}
+
+model Link {
+  id   Int      @id @default(autoincrement())
+  type LinkType @unique
+  url  String   @db.Text
+
+  updatedBy Int?
+  updater   User? @relation("UpdatedBy", fields: [updatedBy], references: [id])
+
+  updatedAt DateTime @updatedAt
+}
+
+enum LinkType {
+  MAP
+  CARD
+}

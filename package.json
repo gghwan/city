@@ -1,0 +1,65 @@
+{
+  "name": "new-project",
+  "version": "1.0.0",
+  "description": "대도시 캠페인",
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "tsx prisma/seed.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gghwan/city.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/gghwan/city/issues"
+  },
+  "homepage": "https://github.com/gghwan/city#readme",
+  "dependencies": {
+    "@ai-sdk/google": "^3.0.65",
+    "@ai-sdk/react": "^3.0.172",
+    "@hookform/resolvers": "^5.2.2",
+    "@prisma/client": "^5.22.0",
+    "@react-pdf-viewer/core": "^3.12.0",
+    "@react-pdf-viewer/default-layout": "^3.12.0",
+    "@supabase/supabase-js": "^2.105.1",
+    "ai": "^6.0.170",
+    "bcryptjs": "^3.0.3",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.14.0",
+    "next": "^14.2.35",
+    "next-auth": "^4.24.14",
+    "prisma": "^5.22.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.74.0",
+    "tailwind-merge": "^3.5.0",
+    "zod": "^4.4.1",
+    "zustand": "^5.0.12"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.35",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.21.0",
+    "typescript": "^5.6.3"
+  },
+  "private": true,
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  }
+}
