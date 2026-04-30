@@ -1,9 +1,6 @@
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import bcrypt from 'bcryptjs';
 import { z } from 'zod';
-import { prisma, isDatabaseConfigured } from '@/lib/prisma';
-import { DEMO_USERS } from '@/lib/constants';
 import { loginRateLimiter } from '@/lib/rate-limiter';
 
 const loginSchema = z.object({
@@ -11,37 +8,7 @@ const loginSchema = z.object({
   password: z.string().min(1),
 });
 
-const demoHash = bcrypt.hashSync('191435', 12);
-
-async function findUser(username: string) {
-  if (isDatabaseConfigured) {
-    try {
-      const dbUser = await prisma.user.findUnique({ where: { username } });
-      if (dbUser) {
-        return {
-          id: dbUser.id.toString(),
-          username: dbUser.username,
-          role: dbUser.role as 'USER' | 'ADMIN',
-          password: dbUser.password,
-          isHashed: true,
-        };
-      }
-    } catch {
-      // fallback below
-    }
-  }
-
-  const demoUser = DEMO_USERS.find((user) => user.username === username);
-  if (!demoUser) return null;
-
-  return {
-    id: demoUser.username,
-    username: demoUser.username,
-    role: demoUser.role,
-    password: demoHash,
-    isHashed: true,
-  };
-}
+const FIXED_PASSWORD = '191435';
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -61,23 +28,22 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials, req) {
         const parsed = loginSchema.safeParse(credentials);
         if (!parsed.success) return null;
+        const username = parsed.data.username.trim();
+        if (!username) return null;
 
         const ipHeader = req?.headers?.['x-forwarded-for'];
         const ip = Array.isArray(ipHeader) ? ipHeader[0] : ipHeader || 'unknown';
         const rate = await loginRateLimiter.limit(ip);
         if (!rate.success) return null;
 
-        const found = await findUser(parsed.data.username);
-        if (!found) return null;
-
-        const valid = await bcrypt.compare(parsed.data.password, found.password);
-        if (!valid) return null;
+        if (parsed.data.password !== FIXED_PASSWORD) return null;
+        const role = username.endsWith('관리자') ? 'ADMIN' : 'USER';
 
         return {
-          id: found.id,
-          username: found.username,
-          role: found.role,
-          name: found.username,
+          id: username,
+          username,
+          role,
+          name: username,
         };
       },
     }),

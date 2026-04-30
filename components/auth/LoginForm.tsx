@@ -51,7 +51,6 @@ export function LoginForm() {
               <input
                 {...register('username')}
                 className="w-full bg-transparent px-2 py-3 text-sm outline-none"
-                placeholder="김주형 또는 김주형관리자"
               />
             </div>
             {errors.username && <p className="mt-1 text-xs text-error">{errors.username.message}</p>}
@@ -65,13 +64,17 @@ export function LoginForm() {
                 {...register('password')}
                 type="password"
                 className="w-full bg-transparent px-2 py-3 text-sm outline-none"
-                placeholder="191435"
               />
             </div>
             {errors.password && <p className="mt-1 text-xs text-error">{errors.password.message}</p>}
           </div>
 
           {error && <p className="rounded-xl bg-error/10 px-3 py-2 text-xs font-semibold text-error">{error}</p>}
+
+          <p className="text-[11px] text-textMuted">
+            비밀번호는 <span className="font-bold text-textBase">191435</span> 고정이며, 이름 뒤에
+            <span className="font-bold text-textBase"> 관리자</span>를 붙이면 관리자 모드로 접속됩니다.
+          </p>
 
           <button
             type="submit"
