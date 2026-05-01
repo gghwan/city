@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import type { NextRequest } from 'next/server';
 
-const protectedPaths = ['/dashboard', '/service', '/map', '/card', '/emergency', '/chat'];
+const protectedPaths = ['/dashboard', '/service', '/map', '/card', '/emergency', '/notice', '/chat'];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -23,5 +23,14 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/login', '/dashboard/:path*', '/service/:path*', '/map/:path*', '/card/:path*', '/emergency/:path*', '/chat/:path*'],
+  matcher: [
+    '/login',
+    '/dashboard/:path*',
+    '/service/:path*',
+    '/map/:path*',
+    '/card/:path*',
+    '/emergency/:path*',
+    '/notice/:path*',
+    '/chat/:path*',
+  ],
 };

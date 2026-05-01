@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { FileText, Home, Map, PhoneCall, Smartphone } from 'lucide-react';
+import { Bell, FileText, Home, Map, PhoneCall, Smartphone } from 'lucide-react';
 import { NavigationLink } from '@/components/common/NavigationLink';
 
 const navItems = [
@@ -10,6 +10,7 @@ const navItems = [
   { href: '/map', label: '구역지도', icon: Map },
   { href: '/card', label: '호별카드', icon: Smartphone },
   { href: '/emergency', label: '비상연락', icon: PhoneCall },
+  { href: '/notice', label: '공지', icon: Bell },
 ];
 
 export function BottomNav() {

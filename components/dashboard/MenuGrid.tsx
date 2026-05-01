@@ -1,4 +1,4 @@
-import { FileText, Home, Map, PhoneCall } from 'lucide-react';
+import { Bell, FileText, Home, Map, PhoneCall } from 'lucide-react';
 import { MenuCard } from '@/components/dashboard/MenuCard';
 
 const items = [
@@ -29,6 +29,13 @@ const items = [
     description: '담당자 및 봉사 인도자',
     icon: PhoneCall,
     color: '#a12c7b',
+  },
+  {
+    href: '/notice',
+    title: '공지사항',
+    description: '캠페인 운영 공지',
+    icon: Bell,
+    color: '#d17b00',
   },
 ];
 

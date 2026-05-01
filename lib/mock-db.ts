@@ -1,4 +1,4 @@
-import type { EmergencyContactItem, FileItem, LinkSet } from '@/types';
+import type { EmergencyContactItem, FileItem, LinkSet, NoticeItem } from '@/types';
 import { DEFAULT_LINKS } from '@/lib/constants';
 
 const nowIso = new Date().toISOString();
@@ -7,8 +7,10 @@ type MockState = {
   files: FileItem[];
   contacts: EmergencyContactItem[];
   links: LinkSet;
+  notices: NoticeItem[];
   nextFileId: number;
   nextContactId: number;
+  nextNoticeId: number;
 };
 
 declare global {
@@ -64,8 +66,18 @@ function initState(): MockState {
       map: DEFAULT_LINKS.map,
       card: DEFAULT_LINKS.card,
     },
+    notices: [
+      {
+        id: 1,
+        title: '2026 대도시 캠페인 안내',
+        content: '봉사 마련 자료와 구역 지도를 확인하고, 비상 연락처를 저장해 주세요.',
+        isPinned: true,
+        createdAt: nowIso,
+      },
+    ],
     nextFileId: 3,
     nextContactId: 3,
+    nextNoticeId: 2,
   };
 }
 

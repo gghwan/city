@@ -20,6 +20,7 @@ model User {
   uploadedFiles   File[]             @relation("UploadedBy")
   createdContacts EmergencyContact[] @relation("CreatedBy")
   updatedLinks    Link[]             @relation("UpdatedBy")
+  createdNotices  Notice[]           @relation("NoticeCreatedBy")
 }
 
 enum Role {
@@ -81,4 +82,20 @@ model Link {
 enum LinkType {
   MAP
   CARD
+}
+
+model Notice {
+  id       Int     @id @default(autoincrement())
+  title    String  @db.VarChar(150)
+  content  String  @db.Text
+  isPinned Boolean @default(false)
+
+  createdBy Int?
+  creator   User? @relation("NoticeCreatedBy", fields: [createdBy], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isPinned, createdAt])
+  @@index([createdAt])
 }

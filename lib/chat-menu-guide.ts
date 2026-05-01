@@ -7,8 +7,10 @@ const MENU_RESPONSES = {
     '호별 카드 메뉴에서는 서울풍납 회중 전자 구역 카드 시스템으로 이동할 수 있습니다. 카드 시스템 열기 버튼을 누르면 spn.jwcard.co.kr로 연결됩니다. 관리자는 링크를 최신 주소로 변경할 수 있습니다.',
   emergency:
     '비상 연락 메뉴에서는 캠페인 담당자와 봉사 인도자 연락처를 확인하고 바로 전화 연결할 수 있습니다. 관련 비상 PDF도 함께 조회할 수 있습니다. 관리자는 연락처 추가/수정/삭제와 비상 PDF 업로드/삭제를 할 수 있습니다.',
+  notice:
+    '공지사항 메뉴에서는 캠페인 운영 공지를 최신순으로 확인할 수 있습니다. 대시보드의 공지사항 카드 또는 하단 탭 공지에서 열 수 있습니다. 관리자는 공지 등록/수정/삭제와 상단 고정 설정을 할 수 있습니다.',
   dashboard:
-    '대시보드는 캠페인 핵심 메뉴의 시작 화면입니다. 봉사 마련, 구역 지도, 호별 카드, 비상 연락 4개 메뉴를 카드 형태로 바로 이동할 수 있습니다. 우측 하단 챗봇 버튼으로 AI 안내도 바로 열 수 있습니다.',
+    '대시보드는 캠페인 핵심 메뉴의 시작 화면입니다. 봉사 마련, 구역 지도, 호별 카드, 비상 연락, 공지사항 메뉴를 카드 형태로 바로 이동할 수 있습니다. 최근 공지사항 미리보기와 우측 하단 챗봇 버튼도 함께 제공합니다.',
 } as const;
 
 function includesAny(text: string, keywords: string[]) {
@@ -34,6 +36,10 @@ export function getMenuGuideResponse(rawText: string): string | null {
     return MENU_RESPONSES.emergency;
   }
 
+  if (includesAny(text, ['공지', '공지사항', 'notice', 'announcement'])) {
+    return MENU_RESPONSES.notice;
+  }
+
   if (includesAny(text, ['대시보드', '홈', '메뉴', 'dashboard'])) {
     return MENU_RESPONSES.dashboard;
   }
@@ -45,6 +51,7 @@ export function getMenuGuideResponse(rawText: string): string | null {
       `2) 구역 지도: Google 지도 열기`,
       `3) 호별 카드: 전자 구역 카드 시스템 접속`,
       `4) 비상 연락: 연락처 확인 및 즉시 전화`,
+      `5) 공지사항: 운영 공지 확인`,
     ].join('\n');
   }
 

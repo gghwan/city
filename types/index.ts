@@ -35,6 +35,14 @@ export interface LinkSet {
   card: string;
 }
 
+export interface NoticeItem {
+  id: number;
+  title: string;
+  content: string;
+  isPinned: boolean;
+  createdAt: string;
+}
+
 export interface AppMessage {
   role: 'user' | 'assistant';
   content: string;
