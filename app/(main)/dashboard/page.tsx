@@ -4,17 +4,8 @@ import { MenuGrid } from '@/components/dashboard/MenuGrid';
 import { getNotices } from '@/actions/notice.actions';
 import { formatDate } from '@/lib/format';
 
-export default function DashboardPage() {
-  const noticesPromise = getNotices();
-
-  return (
-    <DashboardContent noticesPromise={noticesPromise} />
-  );
-}
-
-async function DashboardContent({ noticesPromise }: { noticesPromise: ReturnType<typeof getNotices> }) {
-  const notices = (await noticesPromise).slice(0, 2);
-
+export default async function DashboardPage() {
+  const notices = (await getNotices()).slice(0, 2);
   return (
     <section>
       <p className="mb-4 text-xs text-textMuted">캠페인 핵심 메뉴</p>
