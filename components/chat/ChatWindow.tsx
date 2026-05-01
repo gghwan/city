@@ -17,7 +17,7 @@ export function ChatWindow() {
   };
 
   return (
-    <section className="flex h-[calc(100vh-9rem)] flex-col overflow-hidden rounded-2xl border border-borderColor bg-white">
+    <section className="flex h-[calc(100vh-9rem)] h-[calc(100dvh-9rem)] flex-col overflow-hidden rounded-2xl border border-borderColor bg-white">
       <header className="flex items-center justify-between border-b border-borderColor bg-primary px-4 py-3 text-white">
         <div className="flex items-center gap-2">
           <Sparkles className="h-5 w-5" />
@@ -28,7 +28,7 @@ export function ChatWindow() {
         </button>
       </header>
 
-      <div className="no-scrollbar flex-1 space-y-3 overflow-y-auto bg-surface p-4">
+      <div className="no-scrollbar flex-1 space-y-3 overflow-y-auto overscroll-contain bg-surface p-4">
         {!messages.length && (
           <div className="space-y-4 rounded-xl border border-borderColor bg-white p-4">
             <p className="text-sm font-semibold">무엇이 궁금하신가요?</p>
@@ -83,7 +83,7 @@ export function ChatWindow() {
             }
           }}
           placeholder="메시지를 입력하세요..."
-          className="h-11 min-h-[44px] flex-1 resize-none rounded-xl border border-borderColor bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
+          className="h-11 min-h-[44px] flex-1 resize-none rounded-xl border border-borderColor bg-surface px-3 py-2 text-base outline-none focus:border-primary md:text-sm"
         />
         <button
           type="submit"

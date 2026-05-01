@@ -12,7 +12,7 @@ export function Header({ isAdmin }: { isAdmin: boolean }) {
   const isDashboard = pathname === '/dashboard';
 
   return (
-    <header className="sticky top-0 z-20 border-b border-borderColor bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-20 border-b border-borderColor bg-white md:bg-white/95 md:backdrop-blur">
       <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
         <div className="flex items-center gap-2">
           {!isDashboard && (
