@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { APP_NAME } from '@/lib/constants';
 import { AuthSessionProvider } from '@/components/providers/SessionProvider';
+import { RouteLoadingOverlay } from '@/components/common/RouteLoadingOverlay';
 
 export const metadata: Metadata = {
   title: APP_NAME,
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ko">
       <body>
         <AuthSessionProvider>{children}</AuthSessionProvider>
+        <RouteLoadingOverlay />
       </body>
     </html>
   );

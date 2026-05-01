@@ -5,10 +5,12 @@ import { signOut } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
 import { APP_NAME } from '@/lib/constants';
 import { AdminBadge } from '@/components/common/AdminBadge';
+import { useNavigationStore } from '@/stores/navigation.store';
 
 export function Header({ isAdmin }: { isAdmin: boolean }) {
   const pathname = usePathname();
   const router = useRouter();
+  const startRouteLoading = useNavigationStore((state) => state.startRouteLoading);
   const isDashboard = pathname === '/dashboard';
 
   return (
@@ -18,7 +20,10 @@ export function Header({ isAdmin }: { isAdmin: boolean }) {
           {!isDashboard && (
             <button
               type="button"
-              onClick={() => router.push('/dashboard')}
+              onClick={() => {
+                startRouteLoading();
+                router.push('/dashboard');
+              }}
               className="rounded-lg p-1 text-textMuted hover:bg-bg"
               aria-label="대시보드로 이동"
             >

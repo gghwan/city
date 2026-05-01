@@ -1,8 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FileText, Home, Map, PhoneCall, Smartphone } from 'lucide-react';
+import { NavigationLink } from '@/components/common/NavigationLink';
 
 const navItems = [
   { href: '/dashboard', label: '홈', icon: Home },
@@ -21,7 +21,7 @@ export function BottomNav() {
         {navItems.map((item) => {
           const active = pathname === item.href;
           return (
-            <Link
+            <NavigationLink
               key={item.href}
               href={item.href}
               prefetch
@@ -31,7 +31,7 @@ export function BottomNav() {
             >
               <item.icon className="mb-1 h-5 w-5" />
               {item.label}
-            </Link>
+            </NavigationLink>
           );
         })}
       </div>

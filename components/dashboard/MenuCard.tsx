@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import type { LucideIcon } from 'lucide-react';
+import { NavigationLink } from '@/components/common/NavigationLink';
 
 export function MenuCard({
   href,
@@ -15,7 +15,7 @@ export function MenuCard({
   color: string;
 }) {
   return (
-    <Link
+    <NavigationLink
       href={href}
       prefetch
       className="group relative rounded-2xl border border-borderColor bg-white p-5 transition hover:-translate-y-0.5 hover:shadow-sm active:scale-[0.98]"
@@ -25,6 +25,6 @@ export function MenuCard({
       </div>
       <h3 className="text-base font-black text-textBase">{title}</h3>
       <p className="mt-1 text-xs text-textMuted">{description}</p>
-    </Link>
+    </NavigationLink>
   );
 }

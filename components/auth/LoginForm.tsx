@@ -7,10 +7,12 @@ import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Lock, User } from 'lucide-react';
 import { loginFormSchema, type LoginFormSchema } from '@/lib/validations/auth.schema';
+import { useNavigationStore } from '@/stores/navigation.store';
 
 export function LoginForm() {
   const [error, setError] = useState('');
   const router = useRouter();
+  const startRouteLoading = useNavigationStore((state) => state.startRouteLoading);
   const {
     register,
     handleSubmit,
@@ -33,6 +35,7 @@ export function LoginForm() {
       return;
     }
 
+    startRouteLoading();
     router.push('/dashboard');
     router.refresh();
   };
