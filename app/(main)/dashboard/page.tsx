@@ -10,6 +10,7 @@ export default function DashboardPage() {
 
       <Link
         href="/chat"
+        prefetch
         className="fixed bottom-20 right-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg shadow-primary/30"
         aria-label="챗봇 열기"
       >

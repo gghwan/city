@@ -1,10 +1,9 @@
-import { getServerSession } from 'next-auth';
 import { ExternalLink, Navigation } from 'lucide-react';
-import { authOptions } from '@/lib/auth.config';
 import { getLinks, updateLinkAction } from '@/actions/link.actions';
+import { getCachedServerSession } from '@/lib/session';
 
 export default async function MapPage() {
-  const session = await getServerSession(authOptions);
+  const session = await getCachedServerSession();
   const isAdmin = session?.user.role === 'ADMIN';
   const links = await getLinks();
 

@@ -1,10 +1,9 @@
-import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
-import { authOptions } from '@/lib/auth.config';
 import { LoginForm } from '@/components/auth/LoginForm';
+import { getCachedServerSession } from '@/lib/session';
 
 export default async function LoginPage() {
-  const session = await getServerSession(authOptions);
+  const session = await getCachedServerSession();
   if (session) redirect('/dashboard');
 
   return <LoginForm />;

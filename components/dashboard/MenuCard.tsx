@@ -17,6 +17,7 @@ export function MenuCard({
   return (
     <Link
       href={href}
+      prefetch
       className="group relative rounded-2xl border border-borderColor bg-white p-5 transition hover:-translate-y-0.5 hover:shadow-sm active:scale-[0.98]"
     >
       <div className="mb-3 inline-flex rounded-xl p-2" style={{ background: `${color}1A`, color }}>

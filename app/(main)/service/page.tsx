@@ -1,18 +1,21 @@
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth.config';
 import { deleteFileAction, getFiles, getSignedUrls, updateFileAction } from '@/actions/file.actions';
 import { FileList } from '@/components/service/FileList';
 import { FileUploadForm } from '@/components/service/FileUploadForm';
+import { getCachedServerSession } from '@/lib/session';
 
 export default async function ServicePage() {
-  const [session, rawFiles] = await Promise.all([getServerSession(authOptions), getFiles('service')]);
+  const [session, rawFiles] = await Promise.all([getCachedServerSession(), getFiles('service')]);
   const isAdmin = session?.user.role === 'ADMIN';
 
-  const signedUrls = await getSignedUrls(rawFiles.map((file) => file.storagePath));
-  const files = rawFiles.map((file) => ({
-    ...file,
-    signedUrl: signedUrls[file.storagePath] ?? '#',
-  }));
+  const files = isAdmin
+    ? await (async () => {
+        const signedUrls = await getSignedUrls(rawFiles.map((file) => file.storagePath));
+        return rawFiles.map((file) => ({
+          ...file,
+          signedUrl: signedUrls[file.storagePath] ?? '#',
+        }));
+      })()
+    : rawFiles;
 
   return (
     <section className="space-y-4">

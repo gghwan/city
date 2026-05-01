@@ -22,24 +22,58 @@ export function FileList({
     <div className="space-y-3">
       {files.map((file) => (
         <article key={file.id} className="rounded-2xl border border-borderColor bg-white p-4">
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0 flex-1">
-              <h3 className="truncate text-sm font-bold text-textBase">{file.name}</h3>
-              <p className="mt-1 text-xs text-textMuted">
-                {formatBytes(file.sizeBytes)} · {formatDate(file.createdAt)}
-              </p>
-              {file.description && <p className="mt-2 text-xs text-textMuted">{file.description}</p>}
-            </div>
+          {isAdmin ? (
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0 flex-1">
+                <h3 className="truncate text-sm font-bold text-textBase">{file.name}</h3>
+                <p className="mt-1 text-xs text-textMuted">
+                  {formatBytes(file.sizeBytes)} · {formatDate(file.createdAt)}
+                </p>
+                {file.description && <p className="mt-2 text-xs text-textMuted">{file.description}</p>}
+              </div>
 
-            <a
-              href={file.signedUrl || '#'}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1 rounded-lg bg-surface px-2 py-1 text-xs font-semibold text-textBase"
-            >
-              열기 <ExternalLink className="h-3.5 w-3.5" />
-            </a>
-          </div>
+              <a
+                href={file.signedUrl || '#'}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1 rounded-lg bg-surface px-2 py-1 text-xs font-semibold text-textBase"
+              >
+                열기 <ExternalLink className="h-3.5 w-3.5" />
+              </a>
+            </div>
+          ) : (
+            <details className="group">
+              <summary className="flex cursor-pointer list-none items-start justify-between gap-3 rounded-lg">
+                <div className="min-w-0 flex-1">
+                  <h3 className="truncate text-sm font-bold text-textBase">{file.name}</h3>
+                  <p className="mt-1 text-xs text-textMuted">
+                    {formatBytes(file.sizeBytes)} · {formatDate(file.createdAt)}
+                  </p>
+                  {file.description && <p className="mt-2 text-xs text-textMuted">{file.description}</p>}
+                </div>
+                <span className="inline-flex items-center gap-1 rounded-lg bg-surface px-2 py-1 text-xs font-semibold text-textBase">
+                  선택 <ExternalLink className="h-3.5 w-3.5" />
+                </span>
+              </summary>
+
+              <div className="mt-3 grid gap-2 border-t border-borderColor pt-3 sm:grid-cols-2">
+                <a
+                  href={`/api/files/${file.id}?mode=open`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-lg bg-surface px-3 py-2 text-center text-xs font-semibold text-textBase"
+                >
+                  브라우저에서 열기
+                </a>
+                <a
+                  href={`/api/files/${file.id}?mode=download`}
+                  className="rounded-lg bg-primary px-3 py-2 text-center text-xs font-semibold text-white"
+                >
+                  다운로드
+                </a>
+              </div>
+            </details>
+          )}
 
           {isAdmin && (
             <div className="mt-3 space-y-2 border-t border-borderColor pt-3">

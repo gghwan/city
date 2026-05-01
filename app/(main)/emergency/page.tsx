@@ -1,5 +1,3 @@
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth.config';
 import {
   createContactAction,
   deleteContactAction,
@@ -10,20 +8,25 @@ import { deleteFileAction, getFiles, getSignedUrls, updateFileAction } from '@/a
 import { ContactList } from '@/components/emergency/ContactList';
 import { FileList } from '@/components/service/FileList';
 import { FileUploadForm } from '@/components/service/FileUploadForm';
+import { getCachedServerSession } from '@/lib/session';
 
 export default async function EmergencyPage() {
   const [session, contacts, emergencyRaw] = await Promise.all([
-    getServerSession(authOptions),
+    getCachedServerSession(),
     getContacts(),
     getFiles('emergency'),
   ]);
   const isAdmin = session?.user.role === 'ADMIN';
 
-  const signedUrls = await getSignedUrls(emergencyRaw.map((file) => file.storagePath));
-  const emergencyFiles = emergencyRaw.map((file) => ({
-    ...file,
-    signedUrl: signedUrls[file.storagePath] ?? '#',
-  }));
+  const emergencyFiles = isAdmin
+    ? await (async () => {
+        const signedUrls = await getSignedUrls(emergencyRaw.map((file) => file.storagePath));
+        return emergencyRaw.map((file) => ({
+          ...file,
+          signedUrl: signedUrls[file.storagePath] ?? '#',
+        }));
+      })()
+    : emergencyRaw;
 
   return (
     <section className="space-y-5">
