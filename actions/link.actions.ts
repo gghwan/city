@@ -17,6 +17,7 @@ export async function getLinks(): Promise<LinkSet> {
       return {
         map: links.find((link) => link.type === LinkType.MAP)?.url ?? DEFAULT_LINKS.map,
         card: links.find((link) => link.type === LinkType.CARD)?.url ?? DEFAULT_LINKS.card,
+        talk: links.find((link) => link.type === LinkType.TALK)?.url ?? DEFAULT_LINKS.talk,
       };
     } catch {
       // fallback below
@@ -27,23 +28,26 @@ export async function getLinks(): Promise<LinkSet> {
   return { ...state.links };
 }
 
-export async function updateLink(type: 'map' | 'card', url: string): Promise<void> {
+export async function updateLink(type: 'map' | 'card' | 'talk', url: string): Promise<void> {
   await withAdminAction(async (session) => {
     const parsed = updateLinkSchema.safeParse({ type, url });
     if (!parsed.success) {
       throw new AppError('E007', '입력값을 확인해주세요.', 422);
     }
 
+    const prismaType =
+      type === 'map' ? LinkType.MAP : type === 'card' ? LinkType.CARD : LinkType.TALK;
+
     if (isDatabaseConfigured) {
       try {
         await prisma.link.upsert({
-          where: { type: type === 'map' ? LinkType.MAP : LinkType.CARD },
+          where: { type: prismaType },
           update: {
             url,
             updatedBy: Number.isFinite(Number(session.user.id)) ? Number(session.user.id) : undefined,
           },
           create: {
-            type: type === 'map' ? LinkType.MAP : LinkType.CARD,
+            type: prismaType,
             url,
             updatedBy: Number.isFinite(Number(session.user.id)) ? Number(session.user.id) : undefined,
           },
@@ -63,11 +67,12 @@ export async function updateLinkAction(formData: FormData) {
   const type = formData.get('type');
   const url = formData.get('url');
 
-  if ((type !== 'map' && type !== 'card') || typeof url !== 'string') {
+  if ((type !== 'map' && type !== 'card' && type !== 'talk') || typeof url !== 'string') {
     throw new AppError('E007', '입력값을 확인해주세요.', 422);
   }
 
   await updateLink(type, url);
   revalidatePath('/map');
   revalidatePath('/card');
+  revalidatePath('/talk');
 }

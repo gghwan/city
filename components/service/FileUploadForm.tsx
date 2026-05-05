@@ -10,7 +10,7 @@ function formatBytes(bytes: number) {
   return `${mb.toFixed(1)}MB`;
 }
 
-export function FileUploadForm({ type }: { type: 'SERVICE' | 'EMERGENCY' }) {
+export function FileUploadForm({ type }: { type: 'SERVICE' | 'EMERGENCY' | 'TALK' }) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 

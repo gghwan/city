@@ -65,6 +65,7 @@ function initState(): MockState {
     links: {
       map: DEFAULT_LINKS.map,
       card: DEFAULT_LINKS.card,
+      talk: DEFAULT_LINKS.talk,
     },
     notices: [
       {

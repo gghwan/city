@@ -12,8 +12,10 @@ import { isSupabaseConfigured, storageBucket, supabaseAdmin } from '@/lib/supaba
 import { ALLOWED_UPLOAD_EXTENSIONS, MAX_UPLOAD_SIZE_BYTES } from '@/lib/constants';
 import { uploadRateLimiter } from '@/lib/rate-limiter';
 
-function fileTypeToPrisma(type: 'service' | 'emergency') {
-  return type === 'service' ? FileType.SERVICE : FileType.EMERGENCY;
+function fileTypeToPrisma(type: 'service' | 'emergency' | 'talk') {
+  if (type === 'service') return FileType.SERVICE;
+  if (type === 'emergency') return FileType.EMERGENCY;
+  return FileType.TALK;
 }
 
 function decodeJwtPayload(token: string): Record<string, unknown> | null {
@@ -193,7 +195,7 @@ export async function getSignedUrls(storagePaths: string[]): Promise<Record<stri
   return result;
 }
 
-export async function getFiles(type: 'service' | 'emergency'): Promise<FileItem[]> {
+export async function getFiles(type: 'service' | 'emergency' | 'talk'): Promise<FileItem[]> {
   const prismaType = fileTypeToPrisma(type);
 
   if (isDatabaseConfigured) {
@@ -319,7 +321,7 @@ export async function uploadFileAction(formData: FormData) {
     const description = formData.get('description');
     const file = formData.get('file');
 
-    if (type !== 'SERVICE' && type !== 'EMERGENCY') {
+    if (type !== 'SERVICE' && type !== 'EMERGENCY' && type !== 'TALK') {
       throw new AppError('E007', '입력값을 확인해주세요.', 422);
     }
 
@@ -405,6 +407,7 @@ export async function uploadFileAction(formData: FormData) {
 
     revalidatePath('/service');
     revalidatePath('/emergency');
+    revalidatePath('/talk');
   });
 }
 
@@ -417,6 +420,7 @@ export async function deleteFileAction(formData: FormData) {
   await deleteFile(id);
   revalidatePath('/service');
   revalidatePath('/emergency');
+  revalidatePath('/talk');
 }
 
 export async function updateFileAction(formData: FormData) {
@@ -435,4 +439,5 @@ export async function updateFileAction(formData: FormData) {
 
   revalidatePath('/service');
   revalidatePath('/emergency');
+  revalidatePath('/talk');
 }

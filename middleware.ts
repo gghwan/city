@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import type { NextRequest } from 'next/server';
 
-const protectedPaths = ['/dashboard', '/service', '/map', '/card', '/emergency', '/notice', '/chat'];
+const protectedPaths = ['/dashboard', '/service', '/map', '/card', '/emergency', '/talk', '/notice', '/chat'];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -30,6 +30,7 @@ export const config = {
     '/map/:path*',
     '/card/:path*',
     '/emergency/:path*',
+    '/talk/:path*',
     '/notice/:path*',
     '/chat/:path*',
   ],

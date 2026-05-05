@@ -1,6 +1,6 @@
 export type Role = 'USER' | 'ADMIN';
 
-export type FileType = 'SERVICE' | 'EMERGENCY';
+export type FileType = 'SERVICE' | 'EMERGENCY' | 'TALK';
 
 export interface SessionUser {
   id: string;
@@ -33,6 +33,7 @@ export interface EmergencyContactItem {
 export interface LinkSet {
   map: string;
   card: string;
+  talk: string;
 }
 
 export interface NoticeItem {

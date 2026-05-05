@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
 export const updateLinkSchema = z.object({
-  type: z.enum(['map', 'card']),
+  type: z.enum(['map', 'card', 'talk']),
   url: z.string().url('유효한 URL을 입력해주세요.'),
 });

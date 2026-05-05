@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const createFileSchema = z.object({
-  type: z.enum(['SERVICE', 'EMERGENCY']),
+  type: z.enum(['SERVICE', 'EMERGENCY', 'TALK']),
   name: z.string().min(1, '파일명을 입력해주세요.').max(255),
   description: z.string().max(1000).optional().nullable(),
   storagePath: z.string().min(1),
