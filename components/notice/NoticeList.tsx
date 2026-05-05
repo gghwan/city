@@ -1,4 +1,6 @@
-import { Megaphone, Pin, Trash2 } from 'lucide-react';
+'use client';
+
+import { Megaphone, PencilLine, Pin, Trash2 } from 'lucide-react';
 import type { NoticeItem } from '@/types';
 import { EmptyState } from '@/components/common/EmptyState';
 import { formatDate } from '@/lib/format';
@@ -40,41 +42,55 @@ export function NoticeList({
           </div>
 
           {isAdmin && (
-            <div className="mt-3 space-y-2 border-t border-borderColor pt-3">
-              <form action={updateAction} className="space-y-2">
-                <input type="hidden" name="id" value={notice.id} />
-                <input
-                  name="title"
-                  defaultValue={notice.title}
-                  className="w-full rounded-lg border border-borderColor px-3 py-2 text-sm outline-none focus:border-primary"
-                  required
-                />
-                <textarea
-                  name="content"
-                  defaultValue={notice.content}
-                  rows={4}
-                  className="w-full rounded-lg border border-borderColor px-3 py-2 text-sm outline-none focus:border-primary"
-                  required
-                />
-                <label className="inline-flex items-center gap-2 text-xs font-semibold text-textMuted">
-                  <input type="checkbox" name="isPinned" defaultChecked={notice.isPinned} />
-                  상단 고정 공지
-                </label>
-                <button type="submit" className="rounded-lg bg-surface px-3 py-2 text-xs font-semibold">
-                  공지 수정
-                </button>
-              </form>
+            <details className="mt-3 rounded-xl border border-borderColor bg-surface">
+              <summary className="flex cursor-pointer list-none items-center gap-1 px-3 py-2 text-xs font-bold text-textMuted">
+                <PencilLine className="h-3.5 w-3.5" />
+                관리 옵션 열기
+              </summary>
 
-              <form action={deleteAction}>
-                <input type="hidden" name="id" value={notice.id} />
-                <button
-                  type="submit"
-                  className="inline-flex items-center gap-1 rounded-lg bg-error/10 px-3 py-2 text-xs font-semibold text-error"
+              <div className="space-y-2 border-t border-borderColor px-3 py-3">
+                <form action={updateAction} className="space-y-2">
+                  <input type="hidden" name="id" value={notice.id} />
+                  <input
+                    name="title"
+                    defaultValue={notice.title}
+                    className="w-full rounded-lg border border-borderColor px-3 py-2 text-sm outline-none focus:border-primary"
+                    required
+                  />
+                  <textarea
+                    name="content"
+                    defaultValue={notice.content}
+                    rows={4}
+                    className="w-full rounded-lg border border-borderColor px-3 py-2 text-sm outline-none focus:border-primary"
+                    required
+                  />
+                  <label className="inline-flex items-center gap-2 text-xs font-semibold text-textMuted">
+                    <input type="checkbox" name="isPinned" defaultChecked={notice.isPinned} />
+                    상단 고정 공지
+                  </label>
+                  <button type="submit" className="rounded-lg bg-white px-3 py-2 text-xs font-semibold">
+                    공지 수정
+                  </button>
+                </form>
+
+                <form
+                  action={deleteAction}
+                  onSubmit={(event) => {
+                    if (!window.confirm('이 공지사항을 삭제할까요?')) {
+                      event.preventDefault();
+                    }
+                  }}
                 >
-                  <Trash2 className="h-3.5 w-3.5" /> 공지 삭제
-                </button>
-              </form>
-            </div>
+                  <input type="hidden" name="id" value={notice.id} />
+                  <button
+                    type="submit"
+                    className="inline-flex items-center gap-1 rounded-lg bg-error/10 px-3 py-2 text-xs font-semibold text-error"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" /> 공지 삭제
+                  </button>
+                </form>
+              </div>
+            </details>
           )}
         </article>
       ))}

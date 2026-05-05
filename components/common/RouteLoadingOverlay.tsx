@@ -30,7 +30,7 @@ export function RouteLoadingOverlay() {
   if (!visible) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-black/8">
+    <div className="fixed inset-0 z-50 flex cursor-wait items-center justify-center bg-black/12" aria-busy="true">
       <div className="rounded-2xl border border-borderColor bg-white/95 px-4 py-3 shadow-md">
         <LoadingSpinner size="md" />
       </div>

@@ -14,10 +14,22 @@ export async function getLinks(): Promise<LinkSet> {
   if (isDatabaseConfigured) {
     try {
       const links = await prisma.link.findMany();
+      const mapLink = links.find((link) => link.type === LinkType.MAP);
+      const cardLink = links.find((link) => link.type === LinkType.CARD);
+      const talkLink = links.find((link) => link.type === LinkType.TALK);
       return {
-        map: links.find((link) => link.type === LinkType.MAP)?.url ?? DEFAULT_LINKS.map,
-        card: links.find((link) => link.type === LinkType.CARD)?.url ?? DEFAULT_LINKS.card,
-        talk: links.find((link) => link.type === LinkType.TALK)?.url ?? DEFAULT_LINKS.talk,
+        map: {
+          url: mapLink?.url ?? DEFAULT_LINKS.map,
+          updatedAt: mapLink?.updatedAt.toISOString() ?? null,
+        },
+        card: {
+          url: cardLink?.url ?? DEFAULT_LINKS.card,
+          updatedAt: cardLink?.updatedAt.toISOString() ?? null,
+        },
+        talk: {
+          url: talkLink?.url ?? DEFAULT_LINKS.talk,
+          updatedAt: talkLink?.updatedAt.toISOString() ?? null,
+        },
       };
     } catch {
       // fallback below
@@ -59,7 +71,10 @@ export async function updateLink(type: 'map' | 'card' | 'talk', url: string): Pr
     }
 
     const state = getMockState();
-    state.links[type] = url;
+    state.links[type] = {
+      url,
+      updatedAt: new Date().toISOString(),
+    };
   });
 }
 

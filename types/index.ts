@@ -30,10 +30,15 @@ export interface EmergencyContactItem {
   createdAt: string;
 }
 
+export interface LinkValue {
+  url: string;
+  updatedAt: string | null;
+}
+
 export interface LinkSet {
-  map: string;
-  card: string;
-  talk: string;
+  map: LinkValue;
+  card: LinkValue;
+  talk: LinkValue;
 }
 
 export interface NoticeItem {

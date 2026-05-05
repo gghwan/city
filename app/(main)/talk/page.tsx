@@ -1,6 +1,7 @@
-import { ExternalLink, Link2 } from 'lucide-react';
+import { Link2 } from 'lucide-react';
 import { deleteFileAction, getFiles, getSignedUrls, updateFileAction } from '@/actions/file.actions';
 import { getLinks, updateLinkAction } from '@/actions/link.actions';
+import { ExternalLinkSection } from '@/components/link/ExternalLinkSection';
 import { FileList } from '@/components/service/FileList';
 import { FileUploadForm } from '@/components/service/FileUploadForm';
 import { getCachedServerSession } from '@/lib/session';
@@ -19,8 +20,6 @@ export default async function TalkPage() {
       })()
     : rawFiles;
 
-  const hasTalkLink = Boolean(links.talk?.trim());
-
   return (
     <section className="space-y-5">
       <div>
@@ -28,24 +27,15 @@ export default async function TalkPage() {
         <p className="text-xs text-textMuted">구역별 대화 방법 제안</p>
       </div>
 
-      <article className="rounded-3xl border border-borderColor bg-white p-6 text-center">
-        <h3 className="text-base font-bold">공유 링크</h3>
-        <p className="mt-2 text-xs text-textMuted">외부 자료 링크가 있으면 바로 열 수 있습니다.</p>
-        {hasTalkLink ? (
-          <a
-            href={links.talk}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-4 inline-flex items-center gap-2 rounded-xl bg-[#6b4ce6] px-4 py-3 text-sm font-bold text-white"
-          >
-            <Link2 className="h-4 w-4" />
-            링크 열기
-            <ExternalLink className="h-4 w-4" />
-          </a>
-        ) : (
-          <p className="mt-4 text-xs font-semibold text-textMuted">등록된 링크가 없습니다.</p>
-        )}
-      </article>
+      <ExternalLinkSection
+        title="공유 링크"
+        description="외부 자료 링크가 있으면 바로 열 수 있습니다."
+        href={links.talk.url}
+        icon={Link2}
+        ctaLabel="링크 열기"
+        ctaClassName="bg-[#6b4ce6]"
+        updatedAt={links.talk.updatedAt}
+      />
 
       {isAdmin && (
         <form action={updateLinkAction} className="rounded-2xl border border-borderColor bg-white p-4">
@@ -54,13 +44,16 @@ export default async function TalkPage() {
           <div className="flex gap-2">
             <input
               name="url"
-              defaultValue={links.talk}
+              defaultValue={links.talk.url}
               className="w-full rounded-lg border border-borderColor px-3 py-2 text-sm outline-none focus:border-primary"
             />
             <button type="submit" className="rounded-lg bg-primary px-3 py-2 text-sm font-bold text-white">
               저장
             </button>
           </div>
+          <p className="mt-2 text-[11px] font-semibold text-textMuted">
+            링크를 바꾼 경우 안내 문구/첨부 파일도 함께 최신화해 주세요.
+          </p>
         </form>
       )}
 

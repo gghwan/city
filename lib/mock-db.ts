@@ -63,9 +63,9 @@ function initState(): MockState {
       },
     ],
     links: {
-      map: DEFAULT_LINKS.map,
-      card: DEFAULT_LINKS.card,
-      talk: DEFAULT_LINKS.talk,
+      map: { url: DEFAULT_LINKS.map, updatedAt: nowIso },
+      card: { url: DEFAULT_LINKS.card, updatedAt: nowIso },
+      talk: { url: DEFAULT_LINKS.talk, updatedAt: null },
     },
     notices: [
       {

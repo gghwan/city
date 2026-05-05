@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import { ExternalLink, Navigation } from 'lucide-react';
+import { Navigation } from 'lucide-react';
 import { getLinks, updateLinkAction } from '@/actions/link.actions';
+import { ExternalLinkSection } from '@/components/link/ExternalLinkSection';
 import { getCachedServerSession } from '@/lib/session';
 
 export default async function MapPage() {
@@ -15,44 +15,19 @@ export default async function MapPage() {
         <p className="text-xs text-textMuted">한강공원, 올림픽공원, 아산병원 구역</p>
       </div>
 
-      <article className="rounded-3xl border border-borderColor bg-white p-6 text-center">
-        <h3 className="text-base font-bold">Google 지도</h3>
-        <p className="mt-2 text-xs text-textMuted">지도 앱에서 캠페인 구역을 확인하세요.</p>
-        <a
-          href={links.map}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-4 inline-flex items-center gap-2 rounded-xl bg-[#964219] px-4 py-3 text-sm font-bold text-white"
-        >
-          <Navigation className="h-4 w-4" />
-          지도 열기
-          <ExternalLink className="h-4 w-4" />
-        </a>
-      </article>
-
-      <article className="rounded-3xl border border-borderColor bg-white p-4">
-        <div className="mb-3 flex items-center justify-between gap-2">
-          <h3 className="text-sm font-bold text-textBase">링크 미리보기</h3>
-          <a
-            href={links.map}
-            target="_blank"
-            rel="noreferrer"
-            className="text-xs font-semibold text-primary underline underline-offset-2"
-          >
-            원본 링크 열기
-          </a>
-        </div>
-        <a href={links.map} target="_blank" rel="noreferrer" className="block overflow-hidden rounded-2xl border border-borderColor">
-          <Image
-            src="/images/map-preview.jpg"
-            alt="구역 지도 링크 미리보기"
-            width={1200}
-            height={675}
-            className="h-auto w-full"
-            priority
-          />
-        </a>
-      </article>
+      <ExternalLinkSection
+        title="Google 지도"
+        description="지도 앱에서 캠페인 구역을 확인하세요."
+        href={links.map.url}
+        icon={Navigation}
+        ctaLabel="지도 열기"
+        ctaClassName="bg-[#964219]"
+        updatedAt={links.map.updatedAt}
+        previewImageSrc="/images/map-preview.jpg"
+        previewImageAlt="구역 지도 링크 미리보기"
+        previewWidth={1200}
+        previewHeight={675}
+      />
 
       {isAdmin && (
         <form action={updateLinkAction} className="rounded-2xl border border-borderColor bg-white p-4">
@@ -61,13 +36,16 @@ export default async function MapPage() {
           <div className="flex gap-2">
             <input
               name="url"
-              defaultValue={links.map}
+              defaultValue={links.map.url}
               className="w-full rounded-lg border border-borderColor px-3 py-2 text-sm outline-none focus:border-primary"
             />
             <button type="submit" className="rounded-lg bg-primary px-3 py-2 text-sm font-bold text-white">
               저장
             </button>
           </div>
+          <p className="mt-2 text-[11px] font-semibold text-textMuted">
+            링크를 변경한 뒤 미리보기 이미지도 함께 갱신하면 사용자 혼선이 줄어듭니다.
+          </p>
         </form>
       )}
     </section>

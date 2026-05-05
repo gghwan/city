@@ -22,10 +22,14 @@ export function Header({ isAdmin }: { isAdmin: boolean }) {
               type="button"
               onClick={() => {
                 startRouteLoading();
-                router.push('/dashboard');
+                if (window.history.length > 1) {
+                  router.back();
+                } else {
+                  router.push('/dashboard');
+                }
               }}
               className="rounded-lg p-1 text-textMuted hover:bg-bg"
-              aria-label="대시보드로 이동"
+              aria-label="이전 화면으로 이동"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>

@@ -9,6 +9,10 @@ type LinkStore = {
 };
 
 export const useLinkStore = create<LinkStore>((set) => ({
-  links: { map: '', card: '', talk: '' },
+  links: {
+    map: { url: '', updatedAt: null },
+    card: { url: '', updatedAt: null },
+    talk: { url: '', updatedAt: null },
+  },
   setLinks: (links) => set({ links }),
 }));

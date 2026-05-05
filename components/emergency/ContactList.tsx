@@ -1,5 +1,7 @@
+'use client';
+
 import type { EmergencyContactItem } from '@/types';
-import { Phone, Trash2 } from 'lucide-react';
+import { PencilLine, Phone, Trash2 } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 
 export function ContactList({
@@ -39,47 +41,61 @@ export function ContactList({
           {contact.note && <p className="mt-1 text-xs text-textMuted">{contact.note}</p>}
 
           {isAdmin && (
-            <div className="mt-3 space-y-2 border-t border-borderColor pt-3">
-              <form action={updateAction} className="grid gap-2 sm:grid-cols-2">
-                <input type="hidden" name="id" value={contact.id} />
-                <input
-                  name="name"
-                  defaultValue={contact.name}
-                  className="rounded-lg border border-borderColor px-2 py-1.5 text-xs outline-none focus:border-primary"
-                  required
-                />
-                <input
-                  name="role"
-                  defaultValue={contact.role}
-                  className="rounded-lg border border-borderColor px-2 py-1.5 text-xs outline-none focus:border-primary"
-                  required
-                />
-                <input
-                  name="phone"
-                  defaultValue={contact.phone}
-                  className="rounded-lg border border-borderColor px-2 py-1.5 text-xs outline-none focus:border-primary"
-                  required
-                />
-                <input
-                  name="note"
-                  defaultValue={contact.note ?? ''}
-                  className="rounded-lg border border-borderColor px-2 py-1.5 text-xs outline-none focus:border-primary"
-                />
-                <button type="submit" className="rounded-lg bg-surface px-2 py-1.5 text-xs font-semibold">
-                  수정 저장
-                </button>
-              </form>
+            <details className="mt-3 rounded-xl border border-borderColor bg-surface">
+              <summary className="flex cursor-pointer list-none items-center gap-1 px-3 py-2 text-xs font-bold text-textMuted">
+                <PencilLine className="h-3.5 w-3.5" />
+                관리 옵션 열기
+              </summary>
 
-              <form action={deleteAction}>
-                <input type="hidden" name="id" value={contact.id} />
-                <button
-                  type="submit"
-                  className="inline-flex items-center gap-1 rounded-lg bg-error/10 px-2 py-1.5 text-xs font-semibold text-error"
+              <div className="space-y-2 border-t border-borderColor px-3 py-3">
+                <form action={updateAction} className="grid gap-2 sm:grid-cols-2">
+                  <input type="hidden" name="id" value={contact.id} />
+                  <input
+                    name="name"
+                    defaultValue={contact.name}
+                    className="rounded-lg border border-borderColor px-2 py-1.5 text-xs outline-none focus:border-primary"
+                    required
+                  />
+                  <input
+                    name="role"
+                    defaultValue={contact.role}
+                    className="rounded-lg border border-borderColor px-2 py-1.5 text-xs outline-none focus:border-primary"
+                    required
+                  />
+                  <input
+                    name="phone"
+                    defaultValue={contact.phone}
+                    className="rounded-lg border border-borderColor px-2 py-1.5 text-xs outline-none focus:border-primary"
+                    required
+                  />
+                  <input
+                    name="note"
+                    defaultValue={contact.note ?? ''}
+                    className="rounded-lg border border-borderColor px-2 py-1.5 text-xs outline-none focus:border-primary"
+                  />
+                  <button type="submit" className="rounded-lg bg-white px-2 py-1.5 text-xs font-semibold">
+                    수정 저장
+                  </button>
+                </form>
+
+                <form
+                  action={deleteAction}
+                  onSubmit={(event) => {
+                    if (!window.confirm('이 연락처를 삭제할까요?')) {
+                      event.preventDefault();
+                    }
+                  }}
                 >
-                  <Trash2 className="h-3.5 w-3.5" /> 삭제
-                </button>
-              </form>
-            </div>
+                  <input type="hidden" name="id" value={contact.id} />
+                  <button
+                    type="submit"
+                    className="inline-flex items-center gap-1 rounded-lg bg-error/10 px-2 py-1.5 text-xs font-semibold text-error"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" /> 삭제
+                  </button>
+                </form>
+              </div>
+            </details>
           )}
         </article>
       ))}
