@@ -56,25 +56,32 @@ export function ChatWindow() {
 
         {messages.map((message, index) => (
           <div key={`${message.role}-${index}`} className={message.role === 'user' ? 'text-right' : 'text-left'}>
-            <div
-              className={`inline-block max-w-[85%] rounded-2xl px-3 py-2 text-sm ${
-                message.role === 'user'
-                  ? 'rounded-tr-none bg-primary text-white'
-                  : 'rounded-tl-none border border-borderColor bg-white text-textBase'
-              }`}
-            >
-              {message.content || (isLoading && message.role === 'assistant' ? '...' : '')}
-            </div>
+            {message.role === 'assistant' && isLoading && !message.content.trim() && index === messages.length - 1 ? (
+              <div className="inline-block max-w-[85%] rounded-2xl rounded-tl-none border border-borderColor bg-white px-3 py-2 text-sm text-textMuted">
+                <div className="mb-2 flex items-center gap-1">
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-primary/60 [animation-delay:0ms]" />
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-primary/60 [animation-delay:120ms]" />
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-primary/60 [animation-delay:240ms]" />
+                  <span className="ml-1 text-xs font-semibold">답변 생성 중</span>
+                </div>
+                <div className="space-y-1.5">
+                  <div className="h-2.5 w-44 animate-pulse rounded bg-surface" />
+                  <div className="h-2.5 w-32 animate-pulse rounded bg-surface" />
+                </div>
+              </div>
+            ) : (
+              <div
+                className={`inline-block max-w-[85%] rounded-2xl px-3 py-2 text-sm ${
+                  message.role === 'user'
+                    ? 'rounded-tr-none bg-primary text-white'
+                    : 'rounded-tl-none border border-borderColor bg-white text-textBase'
+                }`}
+              >
+                {message.content}
+              </div>
+            )}
           </div>
         ))}
-
-        {isLoading && (
-          <div className="text-left">
-            <span className="inline-block rounded-2xl rounded-tl-none border border-borderColor bg-white px-3 py-2 text-sm text-textMuted">
-              답변 생성 중...
-            </span>
-          </div>
-        )}
 
         {error && <p className="text-xs font-semibold text-error">{error}</p>}
       </div>

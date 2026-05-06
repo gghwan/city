@@ -1,4 +1,4 @@
-import { generateText } from 'ai';
+import { streamText } from 'ai';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth.config';
@@ -63,7 +63,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const result = await generateText({
+    const result = streamText({
       model: google(GEMINI_MODEL),
       system: SYSTEM_PROMPT,
       messages,
@@ -76,17 +76,8 @@ export async function POST(request: Request) {
       },
     });
 
-    const text = result.text?.trim();
-    if (!text) {
-      return new Response(toFallbackStream('AI 응답이 비어 있습니다. 다시 시도해주세요.'), {
-        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-        status: 200,
-      });
-    }
-
-    return new Response(toFallbackStream(text), {
+    return result.toTextStreamResponse({
       headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-      status: 200,
     });
   } catch {
     const fallbackText = 'AI 서비스를 일시적으로 사용할 수 없습니다. 담당자에게 문의하세요.';
