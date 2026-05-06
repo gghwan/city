@@ -1,5 +1,5 @@
-import { streamText } from 'ai';
-import { google } from '@ai-sdk/google';
+import { generateText } from 'ai';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth.config';
 import { chatRateLimiter } from '@/lib/rate-limiter';
@@ -7,6 +7,10 @@ import { SYSTEM_PROMPT } from '@/lib/constants';
 import { getMenuGuideResponse } from '@/lib/chat-menu-guide';
 
 const GEMINI_MODEL = 'gemini-3.1-flash-lite-preview';
+const GOOGLE_API_KEY = process.env.GOOGLE_AI_API_KEY ?? process.env.GOOGLE_GENERATIVE_AI_API_KEY ?? '';
+const google = createGoogleGenerativeAI({
+  apiKey: GOOGLE_API_KEY || undefined,
+});
 
 function toFallbackStream(message: string) {
   const encoder = new TextEncoder();
@@ -41,11 +45,17 @@ export async function POST(request: Request) {
   const latestUserMessage = [...(payload.messages ?? [])]
     .reverse()
     .find((message) => message.role === 'user')?.content;
-  const menuGuideFallback = latestUserMessage ? getMenuGuideResponse(latestUserMessage) : null;
+  const menuGuideResponse = latestUserMessage ? getMenuGuideResponse(latestUserMessage) : null;
 
-  if (!process.env.GOOGLE_AI_API_KEY) {
-    const fallbackText =
-      menuGuideFallback ?? 'Google AI API 키가 설정되지 않았습니다. 담당자에게 문의하세요.';
+  if (menuGuideResponse) {
+    return new Response(toFallbackStream(menuGuideResponse), {
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+      status: 200,
+    });
+  }
+
+  if (!GOOGLE_API_KEY) {
+    const fallbackText = 'Google AI API 키가 설정되지 않았습니다. 담당자에게 문의하세요.';
     return new Response(toFallbackStream(fallbackText), {
       headers: { 'Content-Type': 'text/plain; charset=utf-8' },
       status: 200,
@@ -53,7 +63,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const result = streamText({
+    const result = await generateText({
       model: google(GEMINI_MODEL),
       system: SYSTEM_PROMPT,
       messages,
@@ -66,10 +76,20 @@ export async function POST(request: Request) {
       },
     });
 
-    return result.toTextStreamResponse();
+    const text = result.text?.trim();
+    if (!text) {
+      return new Response(toFallbackStream('AI 응답이 비어 있습니다. 다시 시도해주세요.'), {
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+        status: 200,
+      });
+    }
+
+    return new Response(toFallbackStream(text), {
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+      status: 200,
+    });
   } catch {
-    const fallbackText =
-      menuGuideFallback ?? 'AI 서비스를 일시적으로 사용할 수 없습니다. 담당자에게 문의하세요.';
+    const fallbackText = 'AI 서비스를 일시적으로 사용할 수 없습니다. 담당자에게 문의하세요.';
     return new Response(toFallbackStream(fallbackText), {
       headers: { 'Content-Type': 'text/plain; charset=utf-8' },
       status: 200,
