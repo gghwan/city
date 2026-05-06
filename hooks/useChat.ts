@@ -47,12 +47,12 @@ export function useChat(initialMessages: AppMessage[] = []) {
       if (!trimmed || isLoading) return;
 
       const nextMessages = [...messages, { role: 'user' as const, content: trimmed }];
-      setMessages(nextMessages);
+      setMessages([...nextMessages, { role: 'assistant' as const, content: '' }]);
       setIsLoading(true);
       setError(null);
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort('timeout'), CHAT_TIMEOUT_MS);
-      let assistantInserted = false;
+      let assistantInserted = true;
 
       try {
         const response = await fetch('/api/chat', {
@@ -70,8 +70,6 @@ export function useChat(initialMessages: AppMessage[] = []) {
         }
 
         let assistantText = '';
-        setMessages((prev) => [...prev, { role: 'assistant', content: '' }]);
-        assistantInserted = true;
 
         await readStream(
           response,
