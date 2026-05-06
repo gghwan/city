@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { Send, Sparkles, Trash2 } from 'lucide-react';
+import { Send, Sparkles } from 'lucide-react';
 import { useChat } from '@/hooks/useChat';
 import { SUGGESTED_QUESTIONS } from '@/lib/constants';
 
@@ -23,8 +23,13 @@ export function ChatWindow() {
           <Sparkles className="h-5 w-5" />
           <h2 className="text-sm font-bold">캠페인 AI 도우미</h2>
         </div>
-        <button type="button" onClick={clear} className="rounded p-1 hover:bg-white/10" aria-label="기록 초기화">
-          <Trash2 className="h-4 w-4" />
+        <button
+          type="button"
+          onClick={clear}
+          className="rounded-md border border-white/35 px-2.5 py-1 text-xs font-bold hover:bg-white/10"
+          aria-label="새 대화"
+        >
+          새 대화
         </button>
       </header>
 
