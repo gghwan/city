@@ -6,6 +6,8 @@ import { chatRateLimiter } from '@/lib/rate-limiter';
 import { SYSTEM_PROMPT } from '@/lib/constants';
 import { getMenuGuideResponse } from '@/lib/chat-menu-guide';
 
+const GEMINI_MODEL = 'gemini-3.1-flash-lite-preview';
+
 function toFallbackStream(message: string) {
   const encoder = new TextEncoder();
   return new ReadableStream({
@@ -52,7 +54,7 @@ export async function POST(request: Request) {
 
   try {
     const result = streamText({
-      model: google('gemini-3-flash-preview'),
+      model: google(GEMINI_MODEL),
       system: SYSTEM_PROMPT,
       messages,
       providerOptions: {
