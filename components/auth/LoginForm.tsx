@@ -46,9 +46,8 @@ export function LoginForm() {
       <aside className="relative hidden w-[56%] xl:block">
         <div className="absolute inset-0 bg-[#066b6c]">
           <img
-            src="https://images.unsplash.com/photo-1616059160527-7729f2da5b1c?auto=format&fit=crop&q=80&w=1920"
+            src="/images/login-campaign-bg.jpeg"
             alt="서울 캠페인 배경"
-            referrerPolicy="no-referrer"
             className="h-full w-full object-cover opacity-60 mix-blend-overlay"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#023132]/90 via-[#066b6c]/40 to-transparent" />
@@ -78,9 +77,8 @@ export function LoginForm() {
       <main className="relative flex w-full items-center justify-center px-5 py-8 sm:px-10 xl:w-[44%]">
         <div className="absolute inset-0 xl:hidden">
           <img
-            src="https://images.unsplash.com/photo-1616059160527-7729f2da5b1c?auto=format&fit=crop&q=80&w=1000"
+            src="/images/login-campaign-bg.jpeg"
             alt="모바일 배경"
-            referrerPolicy="no-referrer"
             className="h-full w-full object-cover opacity-10"
           />
           <div className="absolute inset-0 bg-[#f6f5f0]/90 backdrop-blur-xl" />
