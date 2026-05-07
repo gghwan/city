@@ -84,7 +84,7 @@ export function LoginForm() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#053e42]/38 via-[#0b6167]/30 to-[#033437]/42" />
         </div>
 
-        <section className="relative z-10 w-full max-w-md rounded-[28px] border border-[#ddd8cd] bg-white/92 p-6 shadow-xl shadow-[#066b6c]/10 backdrop-blur-sm sm:p-8">
+        <section className="relative z-10 w-full max-w-md rounded-[28px] border border-[#ddd8cd] bg-white p-6 shadow-xl shadow-[#066b6c]/10 sm:p-8">
           <div className="mb-8">
             <div className="mb-3 inline-flex items-center gap-2 text-[#066b6c]">
               <MapPin className="h-5 w-5" />
