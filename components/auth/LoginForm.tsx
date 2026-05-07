@@ -74,80 +74,82 @@ export function LoginForm() {
         </div>
       </aside>
 
-      <main className="relative flex w-full items-center justify-center px-5 py-8 sm:px-10 xl:w-[44%]">
-        <div className="absolute inset-0 xl:hidden">
-          <img
-            src="/images/login-campaign-bg.jpeg"
-            alt="모바일 배경"
-            className="h-full w-full object-cover opacity-10"
-          />
-          <div className="absolute inset-0 bg-[#f6f5f0]/90 backdrop-blur-xl" />
-        </div>
-
-        <section className="relative z-10 w-full max-w-md rounded-[28px] border border-[#ddd8cd] bg-white/90 p-6 shadow-xl shadow-[#066b6c]/10 backdrop-blur-sm sm:p-8">
-          <div className="mb-8">
-            <div className="mb-3 inline-flex items-center gap-2 text-[#066b6c]">
-              <MapPin className="h-5 w-5" />
-              <span className="text-xs font-black tracking-[0.15em]">서울풍납 회중</span>
-            </div>
-            <h1 className="mb-2 text-3xl font-black tracking-tight text-[#2d2a23]">환영합니다</h1>
-            <p className="text-sm font-medium text-[#7a7568]">
-              아이디와 비밀번호를 입력해 캠페인에 입장하세요.
-            </p>
+      <main className="relative flex w-full items-center justify-center bg-[#ece9df] px-5 py-8 sm:px-10 xl:w-[44%] xl:bg-[#f6f5f0]">
+        <section className="relative z-10 w-full max-w-md overflow-hidden rounded-[28px] border border-white/40 bg-white/22 p-6 shadow-xl shadow-[#066b6c]/10 backdrop-blur-md xl:border-[#ddd8cd] xl:bg-white/92 xl:backdrop-blur-sm sm:p-8">
+          <div className="absolute inset-0 xl:hidden">
+            <img
+              src="/images/login-campaign-bg.jpeg"
+              alt="모바일 폼 배경"
+              className="h-full w-full object-cover object-center opacity-90"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#04474b]/45 via-[#0a656a]/35 to-[#032f33]/55" />
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-              <label htmlFor="username" className="mb-1.5 block text-xs font-bold text-[#6f6a5f]">
-                아이디
-              </label>
-              <div className="group flex items-center rounded-2xl border border-[#d8d4c9] bg-[#fbfaf7] px-3 transition focus-within:border-[#066b6c] focus-within:ring-4 focus-within:ring-[#066b6c]/10">
-                <User className="h-4 w-4 text-[#9e998b] transition group-focus-within:text-[#066b6c]" />
-                <input
-                  id="username"
-                  {...register('username')}
-                  autoComplete="username"
-                  className="w-full bg-transparent px-2 py-3.5 text-base text-[#2d2a23] outline-none md:text-sm"
-                />
+          <div className="relative z-10">
+            <div className="mb-8">
+              <div className="mb-3 inline-flex items-center gap-2 text-[#dff1f2] xl:text-[#066b6c]">
+                <MapPin className="h-5 w-5" />
+                <span className="text-xs font-black tracking-[0.15em]">서울풍납 회중</span>
               </div>
-              {errors.username && <p className="mt-1 text-xs font-semibold text-error">{errors.username.message}</p>}
+              <h1 className="mb-2 text-3xl font-black tracking-tight text-white xl:text-[#2d2a23]">환영합니다</h1>
+              <p className="text-sm font-medium text-white/88 xl:text-[#7a7568]">
+                아이디와 비밀번호를 입력해 캠페인에 입장하세요.
+              </p>
             </div>
 
-            <div>
-              <label htmlFor="password" className="mb-1.5 block text-xs font-bold text-[#6f6a5f]">
-                비밀번호
-              </label>
-              <div className="group flex items-center rounded-2xl border border-[#d8d4c9] bg-[#fbfaf7] px-3 transition focus-within:border-[#066b6c] focus-within:ring-4 focus-within:ring-[#066b6c]/10">
-                <Lock className="h-4 w-4 text-[#9e998b] transition group-focus-within:text-[#066b6c]" />
-                <input
-                  id="password"
-                  {...register('password')}
-                  type="password"
-                  autoComplete="current-password"
-                  className="w-full bg-transparent px-2 py-3.5 text-base text-[#2d2a23] outline-none md:text-sm"
-                />
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div>
+                <label htmlFor="username" className="mb-1.5 block text-xs font-bold text-white/92 xl:text-[#6f6a5f]">
+                  아이디
+                </label>
+                <div className="group flex items-center rounded-2xl border border-white/45 bg-white/90 px-3 transition focus-within:border-[#066b6c] focus-within:ring-4 focus-within:ring-[#066b6c]/10 xl:border-[#d8d4c9] xl:bg-[#fbfaf7]">
+                  <User className="h-4 w-4 text-[#9e998b] transition group-focus-within:text-[#066b6c]" />
+                  <input
+                    id="username"
+                    {...register('username')}
+                    autoComplete="username"
+                    className="w-full bg-transparent px-2 py-3.5 text-base text-[#2d2a23] outline-none md:text-sm"
+                  />
+                </div>
+                {errors.username && <p className="mt-1 text-xs font-semibold text-error">{errors.username.message}</p>}
               </div>
-              {errors.password && <p className="mt-1 text-xs font-semibold text-error">{errors.password.message}</p>}
-            </div>
 
-            {error && <p className="rounded-xl bg-error/10 px-3 py-2 text-xs font-semibold text-error">{error}</p>}
+              <div>
+                <label htmlFor="password" className="mb-1.5 block text-xs font-bold text-white/92 xl:text-[#6f6a5f]">
+                  비밀번호
+                </label>
+                <div className="group flex items-center rounded-2xl border border-white/45 bg-white/90 px-3 transition focus-within:border-[#066b6c] focus-within:ring-4 focus-within:ring-[#066b6c]/10 xl:border-[#d8d4c9] xl:bg-[#fbfaf7]">
+                  <Lock className="h-4 w-4 text-[#9e998b] transition group-focus-within:text-[#066b6c]" />
+                  <input
+                    id="password"
+                    {...register('password')}
+                    type="password"
+                    autoComplete="current-password"
+                    className="w-full bg-transparent px-2 py-3.5 text-base text-[#2d2a23] outline-none md:text-sm"
+                  />
+                </div>
+                {errors.password && <p className="mt-1 text-xs font-semibold text-error">{errors.password.message}</p>}
+              </div>
 
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-[#066b6c] py-3.5 text-sm font-black text-white transition hover:bg-[#045153] focus:outline-none focus:ring-4 focus:ring-[#066b6c]/20 disabled:cursor-not-allowed disabled:opacity-70"
-            >
-              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition duration-700 group-hover:translate-x-full" />
-              {isSubmitting ? (
-                <LoadingSpinner size="sm" label="확인 중..." className="[&>span:last-child]:text-white" />
-              ) : (
-                <>
-                  <span className="relative">캠페인 로그인</span>
-                  <ArrowRight className="relative h-4 w-4" />
-                </>
-              )}
-            </button>
-          </form>
+              {error && <p className="rounded-xl bg-error/10 px-3 py-2 text-xs font-semibold text-error">{error}</p>}
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-[#066b6c] py-3.5 text-sm font-black text-white transition hover:bg-[#045153] focus:outline-none focus:ring-4 focus:ring-[#066b6c]/20 disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition duration-700 group-hover:translate-x-full" />
+                {isSubmitting ? (
+                  <LoadingSpinner size="sm" label="확인 중..." className="[&>span:last-child]:text-white" />
+                ) : (
+                  <>
+                    <span className="relative">캠페인 로그인</span>
+                    <ArrowRight className="relative h-4 w-4" />
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
         </section>
       </main>
     </div>
