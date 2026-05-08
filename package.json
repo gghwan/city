@@ -3,14 +3,17 @@
   "version": "1.0.0",
   "description": "대도시 캠페인",
   "scripts": {
-    "dev": "next dev",
-    "build": "prisma generate && next build",
+    "dev": "npm run env:local && next dev",
+    "build": "npm run env:local && prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:seed": "tsx prisma/seed.ts"
+    "env:local": "node scripts/local-setup.mjs",
+    "prisma:generate": "npm run env:local && prisma generate",
+    "prisma:migrate": "npm run env:local && prisma migrate dev",
+    "prisma:push": "npm run env:local && prisma db push",
+    "prisma:seed": "npm run env:local && tsx prisma/seed.ts",
+    "local:setup": "node scripts/local-full-setup.mjs"
   },
   "repository": {
     "type": "git",

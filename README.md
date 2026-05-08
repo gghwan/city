@@ -11,10 +11,26 @@ Next.js 14 기반 캠페인 운영 웹앱입니다.
 - Gemini 3 Flash 챗봇 스트리밍 응답
 
 ## 로컬 실행
-1. `cp .env.example .env.local`
-2. `npm install`
-3. `npx prisma generate`
-4. `npm run dev`
+1. `npm install`
+2. `npm run env:local`
+3. `npm run dev`
+
+## 전체 기능 로컬 테스트(업로드/DB/챗봇 포함)
+1. `.env.local`에서 Supabase/DB/API 키 값을 실제 값으로 입력
+2. `npm run local:setup`
+3. `npm run dev`
+
+## 로컬 테스트 체크리스트
+1. 로그인: 아이디 아무 값 + 비밀번호 `191435`
+2. 관리자 로그인: 아이디 끝에 `관리자`를 붙이고 비밀번호 `191435`
+3. 파일 업로드 테스트: `SUPABASE_SECRET_KEY` 또는 `SUPABASE_SERVICE_ROLE_KEY` 필요
+4. 챗봇 테스트: `GOOGLE_AI_API_KEY` 설정 필요
+
+## 로컬 명령어
+- `npm run env:local`: `.env.local` 생성/보정 + `.env` 동기화(Prisma CLI용)
+- `npm run prisma:push`: 로컬 DB 스키마 반영
+- `npm run prisma:seed`: 기본 데이터(링크/계정) 시드
+- `npm run local:setup`: 로컬 테스트 준비 일괄 실행
 
 ## 배포
 - GitHub `main` 푸시 시 CI 실행
