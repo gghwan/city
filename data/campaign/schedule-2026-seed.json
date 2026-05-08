@@ -1,0 +1,365 @@
+{
+  "meta": {
+    "title": "2026 대도시 캠페인 (풍납 회중) 게스트 봉사자 배정 및 회중 봉사 마련",
+    "campaignPeriod": {
+      "from": "2026-05-01",
+      "to": "2026-05-25"
+    },
+    "sourceImage": "/Users/gimgyeonghwan/Downloads/KakaoTalk_Photo_2026-05-08-09-33-44.png",
+    "lastUpdated": "2026-05-08",
+    "notes": [
+      "신청 가능한 칸은 applications: [] 빈 배열로 초기화함",
+      "원본 표 해상도상 일부 값은 운영 중 관리자 확인 후 보정 필요"
+    ]
+  },
+  "guests": [
+    { "no": 1, "congregation": "인천신현", "name": "유예원", "gender": "자매", "birthYear": 2002 },
+    { "no": 2, "congregation": "인천신현", "name": "황인혜", "gender": "자매", "birthYear": 2003 },
+    { "no": 3, "congregation": "인천신현", "name": "칼리나", "gender": "자매", "birthYear": 2005 },
+    { "no": 4, "congregation": "경기이천장호원동부", "name": "김선태", "gender": "형제", "birthYear": 1996 },
+    { "no": 5, "congregation": "경기이천동부", "name": "김승욱", "gender": "형제", "birthYear": 1999 },
+    { "no": 6, "congregation": "전북전주서부", "name": "김병수", "gender": "형제", "birthYear": 1999 },
+    { "no": 7, "congregation": "전북전주서부", "name": "나성운", "gender": "형제", "birthYear": 2002 },
+    { "no": 8, "congregation": "전북전주서부", "name": "정찬민", "gender": "형제", "birthYear": 2003 },
+    { "no": 9, "congregation": "강원춘천남부", "name": "합빈", "gender": "형제", "birthYear": 2003 },
+    { "no": 10, "congregation": "충남천안성정", "name": "최수현", "gender": "형제", "birthYear": 1998 },
+    { "no": 11, "congregation": "경기고양원당남부", "name": "채민석", "gender": "형제", "birthYear": 1991 },
+    { "no": 12, "congregation": "경기성남동부", "name": "조민석", "gender": "형제", "birthYear": 1998 },
+    { "no": 13, "congregation": "경기성남동부", "name": "정명진", "gender": "형제", "birthYear": 1997 }
+  ],
+  "dates": [
+    {
+      "date": "2026-05-05",
+      "day": "화",
+      "assignedGuestNos": [1, 2, 3],
+      "circuitServiceZoom": true,
+      "sessions": [
+        {
+          "key": "AM",
+          "time": "09:30",
+          "zone": "한강공원",
+          "leader": "김주형",
+          "slots": [
+            { "slotNo": 1, "status": "assigned", "memberName": "조세희", "applications": [] },
+            { "slotNo": 2, "status": "assigned", "memberName": "김영화", "applications": [] },
+            { "slotNo": 3, "status": "assigned", "memberName": "최지연", "applications": [] }
+          ]
+        },
+        {
+          "key": "PM",
+          "time": "13:30",
+          "zone": "호별+가두",
+          "leader": "구근희",
+          "slots": []
+        }
+      ]
+    },
+    {
+      "date": "2026-05-12",
+      "day": "화",
+      "assignedGuestNos": [6, 7, 8],
+      "circuitServiceZoom": false,
+      "sessions": [
+        {
+          "key": "AM",
+          "time": "10:00",
+          "zone": "아산병원",
+          "leader": "",
+          "slots": [
+            { "slotNo": 6, "status": "open", "label": "6 (봉사신청가능)", "applications": [] },
+            { "slotNo": 7, "status": "open", "label": "7 (봉사신청가능)", "applications": [] },
+            { "slotNo": 8, "status": "open", "label": "8 (봉사신청가능)", "applications": [] }
+          ]
+        },
+        {
+          "key": "PM",
+          "time": "13:30",
+          "zone": "호별+가두",
+          "leader": "구근희",
+          "slots": [
+            { "slotNo": 6, "status": "open", "label": "6 (봉사신청가능)", "applications": [] },
+            { "slotNo": 7, "status": "open", "label": "7 (봉사신청가능)", "applications": [] },
+            { "slotNo": 8, "status": "open", "label": "8 (봉사신청가능)", "applications": [] }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-05-13",
+      "day": "수",
+      "assignedGuestNos": [6, 7, 8, 9],
+      "circuitServiceZoom": false,
+      "sessions": [
+        {
+          "key": "AM",
+          "time": "10:00",
+          "zone": "올공성내천",
+          "leader": "",
+          "slots": [
+            { "slotNo": 6, "status": "assigned", "memberName": "조현숙", "applications": [] },
+            { "slotNo": 7, "status": "assigned", "memberName": "정음표", "applications": [] },
+            { "slotNo": 8, "status": "open", "label": "8 (봉사신청가능)", "applications": [] },
+            { "slotNo": 9, "status": "open", "label": "9 (봉사신청가능)", "applications": [] }
+          ]
+        },
+        {
+          "key": "PM",
+          "time": "13:30",
+          "zone": "호별+가두",
+          "leader": "",
+          "slots": [
+            { "slotNo": 6, "status": "assigned", "memberName": "조세희", "applications": [] },
+            { "slotNo": 7, "status": "assigned", "memberName": "오기쁨", "applications": [] },
+            { "slotNo": 8, "status": "open", "label": "8 (봉사신청가능)", "applications": [] },
+            { "slotNo": 9, "status": "open", "label": "9 (봉사신청가능)", "applications": [] }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-05-14",
+      "day": "목",
+      "assignedGuestNos": [6, 7, 8, 9],
+      "circuitServiceZoom": false,
+      "sessions": [
+        {
+          "key": "AM",
+          "time": "10:00",
+          "zone": "호별+가두",
+          "leader": "김도한",
+          "slots": [
+            { "slotNo": 6, "status": "assigned", "memberName": "김도한", "applications": [] },
+            { "slotNo": 7, "status": "open", "label": "7 (봉사신청가능)", "applications": [] },
+            { "slotNo": 8, "status": "open", "label": "8 (봉사신청가능)", "applications": [] },
+            { "slotNo": 9, "status": "open", "label": "9 (봉사신청가능)", "applications": [] }
+          ]
+        },
+        {
+          "key": "PM",
+          "time": "13:30",
+          "zone": "아산병원",
+          "leader": "김도한",
+          "slots": [
+            { "slotNo": 6, "status": "assigned", "memberName": "이종휘", "applications": [] },
+            { "slotNo": 7, "status": "assigned", "memberName": "김도한", "applications": [] },
+            { "slotNo": 8, "status": "open", "label": "8 (봉사신청가능)", "applications": [] },
+            { "slotNo": 9, "status": "open", "label": "9 (봉사신청가능)", "applications": [] }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-05-15",
+      "day": "금",
+      "assignedGuestNos": [4, 5, 6, 7, 8, 9],
+      "circuitServiceZoom": true,
+      "sessions": [
+        {
+          "key": "AM",
+          "time": "09:30",
+          "zone": "한강공원",
+          "leader": "",
+          "slots": [
+            { "slotNo": 4, "status": "assigned", "memberName": "송보라", "applications": [] },
+            { "slotNo": 5, "status": "open", "label": "5 (봉사신청가능)", "applications": [] },
+            { "slotNo": 6, "status": "open", "label": "6 (봉사신청가능)", "applications": [] },
+            { "slotNo": 7, "status": "open", "label": "7 (봉사신청가능)", "applications": [] },
+            { "slotNo": 8, "status": "open", "label": "8 (봉사신청가능)", "applications": [] },
+            { "slotNo": 9, "status": "open", "label": "9 (봉사신청가능)", "applications": [] }
+          ]
+        },
+        {
+          "key": "PM",
+          "time": "13:30",
+          "zone": "호별+가두",
+          "leader": "김철현",
+          "slots": [
+            { "slotNo": 6, "status": "assigned", "memberName": "정민우", "applications": [] },
+            { "slotNo": 7, "status": "assigned", "memberName": "조현숙", "applications": [] },
+            { "slotNo": 8, "status": "assigned", "memberName": "전동혁", "applications": [] },
+            { "slotNo": 9, "status": "open", "label": "9 (봉사신청가능)", "applications": [] }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-05-16",
+      "day": "토",
+      "assignedGuestNos": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+      "circuitServiceZoom": true,
+      "sessions": [
+        {
+          "key": "AM",
+          "time": "09:30",
+          "zone": "전시대+성내천",
+          "leader": "김주형",
+          "slots": [
+            { "slotNo": 4, "status": "assigned", "memberName": "조현숙", "applications": [] },
+            { "slotNo": 5, "status": "assigned", "memberName": "정음표", "applications": [] },
+            { "slotNo": 6, "status": "assigned", "memberName": "유정숙", "applications": [] },
+            { "slotNo": 7, "status": "assigned", "memberName": "최예은", "applications": [] },
+            { "slotNo": 8, "status": "assigned", "memberName": "전동혁", "applications": [] },
+            { "slotNo": 9, "status": "assigned", "memberName": "정민우", "applications": [] },
+            { "slotNo": 10, "status": "open", "label": "10 (봉사신청가능)", "applications": [] },
+            { "slotNo": 11, "status": "open", "label": "11 (봉사신청가능)", "applications": [] },
+            { "slotNo": 12, "status": "open", "label": "12 (봉사신청가능)", "applications": [] },
+            { "slotNo": 13, "status": "open", "label": "13 (봉사신청가능)", "applications": [] }
+          ]
+        },
+        {
+          "key": "PM",
+          "time": "13:30",
+          "zone": "호별+가두",
+          "leader": "",
+          "slots": [
+            { "slotNo": 6, "status": "open", "label": "6 (봉사신청가능)", "applications": [] },
+            { "slotNo": 7, "status": "open", "label": "7 (봉사신청가능)", "applications": [] },
+            { "slotNo": 8, "status": "open", "label": "8 (봉사신청가능)", "applications": [] },
+            { "slotNo": 10, "status": "open", "label": "10 (봉사신청가능)", "applications": [] },
+            { "slotNo": 13, "status": "open", "label": "13 (봉사신청가능)", "applications": [] }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-05-17",
+      "day": "일",
+      "assignedGuestNos": [10, 11, 12, 13],
+      "circuitServiceZoom": false,
+      "sessions": [
+        {
+          "key": "AM",
+          "time": "09:30",
+          "zone": "한강공원",
+          "leader": "",
+          "slots": [
+            { "slotNo": 10, "status": "open", "label": "10 (봉사신청가능)", "applications": [] },
+            { "slotNo": 11, "status": "open", "label": "11 (봉사신청가능)", "applications": [] },
+            { "slotNo": 12, "status": "open", "label": "12 (봉사신청가능)", "applications": [] },
+            { "slotNo": 13, "status": "open", "label": "13 (봉사신청가능)", "applications": [] }
+          ]
+        },
+        {
+          "key": "PM",
+          "time": "집회 후",
+          "zone": "호별+가두",
+          "leader": "",
+          "slots": [
+            { "slotNo": 10, "status": "assigned", "memberName": "유정숙", "applications": [] },
+            { "slotNo": 11, "status": "assigned", "memberName": "최예은", "applications": [] },
+            { "slotNo": 12, "status": "open", "label": "12 (봉사신청가능)", "applications": [] },
+            { "slotNo": 13, "status": "open", "label": "13 (봉사신청가능)", "applications": [] }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-05-23",
+      "day": "토",
+      "assignedGuestNos": [1, 2, 3, 11, 12, 13],
+      "circuitServiceZoom": true,
+      "sessions": [
+        {
+          "key": "AM",
+          "time": "09:30",
+          "zone": "전시대+성내천",
+          "leader": "김주형",
+          "slots": [
+            { "slotNo": 1, "status": "assigned", "memberName": "김영화", "applications": [] },
+            { "slotNo": 2, "status": "assigned", "memberName": "송보라", "applications": [] },
+            { "slotNo": 3, "status": "assigned", "memberName": "송자연", "applications": [] },
+            { "slotNo": 11, "status": "assigned", "memberName": "정음표", "applications": [] },
+            { "slotNo": 12, "status": "assigned", "memberName": "김도한", "applications": [] },
+            { "slotNo": 13, "status": "assigned", "memberName": "정민우", "applications": [] }
+          ]
+        },
+        {
+          "key": "PM",
+          "time": "13:30",
+          "zone": "호별+가두",
+          "leader": "",
+          "slots": [
+            { "slotNo": 11, "status": "open", "label": "11 (봉사신청가능)", "applications": [] },
+            { "slotNo": 12, "status": "open", "label": "12 (봉사신청가능)", "applications": [] },
+            { "slotNo": 13, "status": "open", "label": "13 (봉사신청가능)", "applications": [] }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-05-24",
+      "day": "일",
+      "assignedGuestNos": [1, 2, 3, 4, 5],
+      "circuitServiceZoom": false,
+      "sessions": [
+        {
+          "key": "AM",
+          "time": "09:30",
+          "zone": "한강공원",
+          "leader": "",
+          "slots": [
+            { "slotNo": 1, "status": "open", "label": "1 (봉사신청가능)", "applications": [] },
+            { "slotNo": 2, "status": "open", "label": "2 (봉사신청가능)", "applications": [] },
+            { "slotNo": 3, "status": "open", "label": "3 (봉사신청가능)", "applications": [] },
+            { "slotNo": 4, "status": "open", "label": "4 (봉사신청가능)", "applications": [] },
+            { "slotNo": 5, "status": "open", "label": "5 (봉사신청가능)", "applications": [] }
+          ]
+        },
+        {
+          "key": "PM",
+          "time": "집회 후",
+          "zone": "호별+가두",
+          "leader": "",
+          "slots": [
+            { "slotNo": 1, "status": "assigned", "memberName": "정경선", "applications": [] },
+            { "slotNo": 2, "status": "assigned", "memberName": "최예은", "applications": [] },
+            { "slotNo": 3, "status": "assigned", "memberName": "유정숙", "applications": [] },
+            { "slotNo": 4, "status": "assigned", "memberName": "송자연", "applications": [] },
+            { "slotNo": 5, "status": "assigned", "memberName": "허상철", "applications": [] }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-05-25",
+      "day": "월",
+      "assignedGuestNos": [1, 2, 3, 4, 5, 11, 12, 13],
+      "circuitServiceZoom": true,
+      "sessions": [
+        {
+          "key": "AM",
+          "time": "09:30",
+          "zone": "올공성내천",
+          "leader": "",
+          "slots": [
+            { "slotNo": 1, "status": "assigned", "memberName": "조현숙", "applications": [] },
+            { "slotNo": 2, "status": "assigned", "memberName": "정경선", "applications": [] },
+            { "slotNo": 3, "status": "assigned", "memberName": "오기쁨", "applications": [] },
+            { "slotNo": 4, "status": "assigned", "memberName": "조세희", "applications": [] },
+            { "slotNo": 5, "status": "assigned", "memberName": "김향란", "applications": [] },
+            { "slotNo": 11, "status": "assigned", "memberName": "김도한", "applications": [] },
+            { "slotNo": 12, "status": "assigned", "memberName": "정음표", "applications": [] },
+            { "slotNo": 13, "status": "assigned", "memberName": "전동혁", "applications": [] }
+          ]
+        },
+        {
+          "key": "PM",
+          "time": "13:30",
+          "zone": "호별+가두",
+          "leader": "",
+          "slots": [
+            { "slotNo": 13, "status": "open", "label": "13 (봉사신청가능)", "applications": [] }
+          ]
+        }
+      ]
+    }
+  ],
+  "globalNotes": {
+    "applyContact": "봉사 신청 방법 - 김주형",
+    "meetingPlace": "모임 장소는 모두 왕국 회관입니다.",
+    "specialDuty": [
+      "아산병원 공개 봉사 (책임자 전부식)",
+      "천호역 전시대 봉사 (책임자 김도한)"
+    ]
+  }
+}

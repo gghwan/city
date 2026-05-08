@@ -7,7 +7,7 @@ import { APP_NAME } from '@/lib/constants';
 import { AdminBadge } from '@/components/common/AdminBadge';
 import { useNavigationStore } from '@/stores/navigation.store';
 
-export function Header({ isAdmin }: { isAdmin: boolean }) {
+export function Header({ isAdmin, username }: { isAdmin: boolean; username: string }) {
   const pathname = usePathname();
   const router = useRouter();
   const startRouteLoading = useNavigationStore((state) => state.startRouteLoading);
@@ -39,6 +39,12 @@ export function Header({ isAdmin }: { isAdmin: boolean }) {
 
         <div className="flex items-center gap-2">
           {isAdmin && <AdminBadge />}
+          <span
+            className="max-w-[7.5rem] truncate rounded-md bg-surface px-2 py-1 text-xs font-semibold text-textMuted"
+            title={username}
+          >
+            {username}
+          </span>
           <button
             type="button"
             onClick={() => signOut({ callbackUrl: '/login' })}

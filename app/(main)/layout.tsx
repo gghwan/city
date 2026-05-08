@@ -6,5 +6,9 @@ export default async function MainLayout({ children }: { children: React.ReactNo
   const session = await getCachedServerSession();
   if (!session) redirect('/login');
 
-  return <AppShell isAdmin={session.user.role === 'ADMIN'}>{children}</AppShell>;
+  return (
+    <AppShell isAdmin={session.user.role === 'ADMIN'} username={session.user.username}>
+      {children}
+    </AppShell>
+  );
 }
