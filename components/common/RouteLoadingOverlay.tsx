@@ -6,6 +6,7 @@ import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { useNavigationStore } from '@/stores/navigation.store';
 
 const SPINNER_DELAY_MS = 120;
+const LOADING_FAILSAFE_MS = 8000;
 
 export function RouteLoadingOverlay() {
   const pathname = usePathname();
@@ -26,6 +27,25 @@ export function RouteLoadingOverlay() {
     const timer = setTimeout(() => setVisible(true), SPINNER_DELAY_MS);
     return () => clearTimeout(timer);
   }, [isRouteLoading]);
+
+  useEffect(() => {
+    if (!isRouteLoading) return;
+    const failsafe = setTimeout(() => {
+      stopRouteLoading();
+      setVisible(false);
+    }, LOADING_FAILSAFE_MS);
+    return () => clearTimeout(failsafe);
+  }, [isRouteLoading, stopRouteLoading]);
+
+  useEffect(() => {
+    const resetLoading = () => stopRouteLoading();
+    window.addEventListener('pageshow', resetLoading);
+    window.addEventListener('popstate', resetLoading);
+    return () => {
+      window.removeEventListener('pageshow', resetLoading);
+      window.removeEventListener('popstate', resetLoading);
+    };
+  }, [stopRouteLoading]);
 
   if (!visible) return null;
 

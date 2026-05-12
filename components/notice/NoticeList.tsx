@@ -29,6 +29,11 @@ export function NoticeList({
               <h3 className="flex items-center gap-1 text-sm font-bold text-textBase">
                 <Megaphone className="h-4 w-4 text-primary" />
                 <span className="truncate">{notice.title}</span>
+                {notice.noticeType === 'EMERGENCY' && (
+                  <span className="inline-flex items-center gap-1 rounded bg-error/15 px-1.5 py-0.5 text-[10px] font-bold text-error">
+                    팝업 공지
+                  </span>
+                )}
                 {notice.isPinned && (
                   <span className="inline-flex items-center gap-1 rounded bg-warning/15 px-1.5 py-0.5 text-[10px] font-bold text-warning">
                     <Pin className="h-3 w-3" />
@@ -48,8 +53,8 @@ export function NoticeList({
                 관리 옵션 열기
               </summary>
 
-              <div className="space-y-2 border-t border-borderColor px-3 py-3">
-                <form action={updateAction} className="space-y-2">
+              <div className="space-y-3 border-t border-borderColor px-3 py-3">
+                <form action={updateAction} className="space-y-3">
                   <input type="hidden" name="id" value={notice.id} />
                   <input
                     name="title"
@@ -64,13 +69,26 @@ export function NoticeList({
                     className="w-full rounded-lg border border-borderColor px-3 py-2 text-sm outline-none focus:border-primary"
                     required
                   />
+                  <label className="block text-xs font-semibold text-textMuted">
+                    공지 유형
+                    <select
+                      name="noticeType"
+                      defaultValue={notice.noticeType}
+                      className="mt-1 w-full rounded-lg border border-borderColor px-3 py-2 text-sm outline-none focus:border-primary"
+                    >
+                      <option value="GENERAL">일반 공지</option>
+                      <option value="EMERGENCY">팝업 공지 (일반 유저 팝업)</option>
+                    </select>
+                  </label>
                   <label className="inline-flex items-center gap-2 text-xs font-semibold text-textMuted">
                     <input type="checkbox" name="isPinned" defaultChecked={notice.isPinned} />
-                    상단 고정 공지
+                    상단 고정 공지 (기존 고정은 자동 해제)
                   </label>
-                  <button type="submit" className="rounded-lg bg-white px-3 py-2 text-xs font-semibold">
-                    공지 수정
-                  </button>
+                  <div className="pt-1">
+                    <button type="submit" className="rounded-lg bg-white px-3 py-2 text-xs font-semibold">
+                      공지 수정
+                    </button>
+                  </div>
                 </form>
 
                 <form
@@ -84,7 +102,7 @@ export function NoticeList({
                   <input type="hidden" name="id" value={notice.id} />
                   <button
                     type="submit"
-                    className="inline-flex items-center gap-1 rounded-lg bg-error/10 px-3 py-2 text-xs font-semibold text-error"
+                    className="mt-1 inline-flex items-center gap-1 rounded-lg bg-error/10 px-3 py-2 text-xs font-semibold text-error"
                   >
                     <Trash2 className="h-3.5 w-3.5" /> 공지 삭제
                   </button>

@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+@import '@react-pdf-viewer/core/lib/styles/index.css';
+@import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 @tailwind base;
 @tailwind components;

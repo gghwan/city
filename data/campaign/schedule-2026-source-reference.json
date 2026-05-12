@@ -1,0 +1,267 @@
+{
+  "document_title": "2026 대도시 캠페인 (풍납 회중) 게스트 봉사자 배정 및 회중 봉사 마련",
+  "legend": {
+    "봉사 마련 음영처리 구분": ["한강공원", "아산병원", "올공성내천"]
+  },
+  "guest_list": [
+    { "no": 1, "congregation": "인천신현", "name": "유예원", "gender": "자매", "birth_year": 2002 },
+    { "no": 2, "congregation": "인천신현", "name": "황인혜", "gender": "자매", "birth_year": 2003 },
+    { "no": 3, "congregation": "인천신현", "name": "카리나", "gender": "자매", "birth_year": 2005 },
+    { "no": 4, "congregation": "경기이천장호원동부", "name": "김선태", "gender": "형제", "birth_year": 1996 },
+    { "no": 5, "congregation": "경기이천동부", "name": "김승욱", "gender": "형제", "birth_year": 1999 },
+    { "no": 6, "congregation": "전북전주서부", "name": "김병수", "gender": "형제", "birth_year": 1999 },
+    { "no": 7, "congregation": "전북전주서부", "name": "나성운", "gender": "형제", "birth_year": 2002 },
+    { "no": 8, "congregation": "전북전주서부", "name": "정찬민", "gender": "형제", "birth_year": 2003 },
+    { "no": 9, "congregation": "강원춘천남부", "name": "함빈", "gender": "형제", "birth_year": 2003 },
+    { "no": 10, "congregation": "충남천안성정", "name": "최수현", "gender": "형제", "birth_year": 1998 },
+    { "no": 11, "congregation": "경기고양원당남부", "name": "채민석", "gender": "형제", "birth_year": 1991 },
+    { "no": 12, "congregation": "경기성남동부", "name": "조민석", "gender": "형제", "birth_year": 1998 },
+    { "no": 13, "congregation": "경기성남동부", "name": "*정명진", "gender": "형제", "birth_year": 1997 }
+  ],
+  "schedule": [
+    {
+      "date": "5/5 화",
+      "assigned_guests_summary": ["1 유예원", "2 황인혜", "3 카리나"],
+      "total_guests": 3,
+      "morning_sessions": [
+        {
+          "time": "09시 30분",
+          "location": "한강공원",
+          "leader": "김주형",
+          "volunteers": ["1 조세희", "2 김영화", "3 최지연"]
+        }
+      ],
+      "afternoon_sessions": [
+        {
+          "time": "13시 30분",
+          "location": "호별+가두",
+          "leader": "구군회",
+          "volunteers": []
+        }
+      ],
+      "circuit_zoom": "O"
+    },
+    {
+      "date": "5/12 화",
+      "assigned_guests_summary": ["6 김병수", "7 나성운", "8 정찬민"],
+      "total_guests": 3,
+      "morning_sessions": [
+        {
+          "time": "10시",
+          "location": "아산병원",
+          "leader": "",
+          "volunteers": ["6 (봉사신청가능)", "7 (봉사신청가능)", "8 (봉사신청가능)"]
+        }
+      ],
+      "afternoon_sessions": [
+        {
+          "time": "13시 30분",
+          "location": "호별+가두",
+          "leader": "구군회",
+          "volunteers": ["6 (봉사신청가능)", "7 (봉사신청가능)", "8 (봉사신청가능)"]
+        }
+      ],
+      "circuit_zoom": ""
+    },
+    {
+      "date": "5/13 수",
+      "assigned_guests_summary": ["6 김병수", "7 나성운", "8 정찬민", "9 함빈"],
+      "total_guests": 4,
+      "morning_sessions": [
+        {
+          "time": "10시",
+          "location": "올공성내천",
+          "leader": "",
+          "volunteers": ["6 조현숙", "7 정음표", "8 (봉사신청가능)", "9 (봉사신청가능)"]
+        }
+      ],
+      "afternoon_sessions": [
+        {
+          "time": "13시 30분",
+          "location": "호별+가두",
+          "leader": "조세희",
+          "volunteers": ["6 조세희", "7 오기쁨", "8 (봉사신청가능)", "9 (봉사신청가능)"]
+        }
+      ],
+      "circuit_zoom": ""
+    },
+    {
+      "date": "5/14 목",
+      "assigned_guests_summary": ["6 김병수", "7 나성운", "8 정찬민", "9 함빈"],
+      "total_guests": 4,
+      "morning_sessions": [
+        {
+          "time": "10시",
+          "location": "호별+가두",
+          "leader": "김도한",
+          "volunteers": ["6 김도한", "7 (봉사신청가능)", "8 (봉사신청가능)", "9 (봉사신청가능)"]
+        }
+      ],
+      "afternoon_sessions": [
+        {
+          "time": "13시 30분",
+          "location": "아산병원",
+          "leader": "김도한",
+          "volunteers": ["6 이종휘", "7 김도한", "8 (봉사신청가능)", "9 (봉사신청가능)"]
+        }
+      ],
+      "circuit_zoom": ""
+    },
+    {
+      "date": "5/15 금",
+      "assigned_guests_summary": ["4 김선태", "5 김승욱", "6 김병수", "7 나성운", "8 정찬민", "9 함빈"],
+      "total_guests": 6,
+      "morning_sessions": [
+        {
+          "time": "09시 30분",
+          "location": "한강공원",
+          "leader": "",
+          "volunteers": ["4 송보라", "5 (봉사신청가능)", "6 (봉사신청가능)", "7 (봉사신청가능)", "8 (봉사신청가능)", "9 (봉사신청가능)"]
+        }
+      ],
+      "afternoon_sessions": [
+        {
+          "time": "13시 30분",
+          "location": "호별+가두",
+          "leader": "김철현",
+          "volunteers": ["6 정민우", "7 조현숙", "8 전통혁", "9 (봉사신청가능)"]
+        }
+      ],
+      "circuit_zoom": "O"
+    },
+    {
+      "date": "5/16 토",
+      "assigned_guests_summary": ["4 김선태", "5 김승욱", "6 김병수", "7 나성운", "8 정찬민", "9 함빈", "10 최수현", "11 채민석", "12 조민석", "13 정명진"],
+      "total_guests": 10,
+      "morning_sessions": [
+        {
+          "time": "09시 30분",
+          "location": "전시대+성내천",
+          "leader": "김주형",
+          "volunteers": ["4 조현숙", "5 정음표", "6 유정숙", "7 최예은", "8 전통혁", "9 정민우", "10 (봉사신청가능)", "11 (봉사신청가능)"]
+        },
+        {
+          "time": "",
+          "location": "올공성내천",
+          "leader": "",
+          "volunteers": ["12 (봉사신청가능)", "13 (봉사신청가능)"]
+        }
+      ],
+      "afternoon_sessions": [
+        {
+          "time": "13시 30분",
+          "location": "호별+가두",
+          "leader": "",
+          "volunteers": ["6 (봉사신청가능)", "7 (봉사신청가능)", "8 (봉사신청가능)", "10 (봉사신청가능)", "13 (봉사신청가능)"]
+        }
+      ],
+      "circuit_zoom": "O"
+    },
+    {
+      "date": "5/17 일",
+      "assigned_guests_summary": ["10 최수현", "11 채민석", "12 조민석", "13 정명진"],
+      "total_guests": 4,
+      "morning_sessions": [
+        {
+          "time": "9시 30분",
+          "location": "한강공원",
+          "leader": "",
+          "volunteers": ["10 (봉사신청가능)", "11 (봉사신청가능)", "12 (봉사신청가능)"]
+        }
+      ],
+      "afternoon_sessions": [
+        {
+          "time": "집회 후",
+          "location": "호별+가두",
+          "leader": "",
+          "volunteers": ["10 유정숙", "11 최예은", "12 (봉사신청가능)", "13 (봉사신청가능)"]
+        }
+      ],
+      "circuit_zoom": ""
+    },
+    {
+      "date": "5/23 토",
+      "assigned_guests_summary": ["1 유예원", "2 황인혜", "3 카리나", "11 채민석", "12 조민석", "13 정명진"],
+      "total_guests": 6,
+      "morning_sessions": [
+        {
+          "time": "09시 30분",
+          "location": "전시대+성내천",
+          "leader": "김주형",
+          "volunteers": ["1 김영화", "2 송보라", "3 송자연", "11 정음표"]
+        },
+        {
+          "time": "",
+          "location": "올공성내천",
+          "leader": "",
+          "volunteers": ["12 김도한", "13 정민우"]
+        }
+      ],
+      "afternoon_sessions": [
+        {
+          "time": "13시 30분",
+          "location": "호별+가두",
+          "leader": "",
+          "volunteers": ["11 (봉사신청가능)", "12 (봉사신청가능)", "13 (봉사신청가능)"]
+        }
+      ],
+      "circuit_zoom": "O"
+    },
+    {
+      "date": "5/24 일",
+      "assigned_guests_summary": ["1 유예원", "2 황인혜", "3 카리나", "4 김선태", "5 김승욱"],
+      "total_guests": 5,
+      "morning_sessions": [
+        {
+          "time": "9시 30분",
+          "location": "한강공원",
+          "leader": "",
+          "volunteers": ["1 (봉사신청가능)", "2 (봉사신청가능)", "3 (봉사신청가능)", "4 (봉사신청가능)", "5 (봉사신청가능)"]
+        }
+      ],
+      "afternoon_sessions": [
+        {
+          "time": "집회 후",
+          "location": "호별+가두",
+          "leader": "",
+          "volunteers": ["1 정경선", "2 최예은", "3 유정숙", "4 송자연", "5 허상철"]
+        }
+      ],
+      "circuit_zoom": ""
+    },
+    {
+      "date": "5/25 월",
+      "assigned_guests_summary": ["1 유예원", "2 황인혜", "3 카리나", "4 김선태", "5 김승욱", "11 채민석", "12 조민석", "13 정명진"],
+      "total_guests": 8,
+      "morning_sessions": [
+        {
+          "time": "09시 30분",
+          "location": "올공성내천",
+          "leader": "",
+          "volunteers": ["1 조현숙", "2 정경선", "3 오기쁨", "4 조세희", "5 김향란", "11 김도한", "12 정음표", "13 전통혁"]
+        }
+      ],
+      "afternoon_sessions": [
+        {
+          "time": "13시 30분",
+          "location": "호별+가두",
+          "leader": "",
+          "volunteers": ["13 (봉사신청가능)"]
+        }
+      ],
+      "circuit_zoom": "O"
+    }
+  ],
+  "announcements": [
+    "대도시 캠페인 풍납 회중 봉사 마련 계획",
+    "(우천시 - 아산병원 내부, 지하철역 내부 봉사)",
+    "*모임 장소는 모두 왕국 회관입니다",
+    "*봉사 신청 방법 - 김주형"
+  ],
+  "bottom_notes": [
+    "순회구 봉사 마련 (09시30분 순회구 봉사 모임 ZOOM 공유)",
+    "대도시 캠페인 순회구 봉사 (풍납 참여) 마련",
+    "1.아산병원 공개 봉사 (책임자 전부식)",
+    "2.천호역 전시대 봉사 (책임자 김도한)"
+  ]
+}

@@ -21,10 +21,10 @@ export function Header({ isAdmin, username }: { isAdmin: boolean; username: stri
             <button
               type="button"
               onClick={() => {
-                startRouteLoading();
                 if (window.history.length > 1) {
                   router.back();
                 } else {
+                  startRouteLoading();
                   router.push('/dashboard');
                 }
               }}
@@ -39,12 +39,19 @@ export function Header({ isAdmin, username }: { isAdmin: boolean; username: stri
 
         <div className="flex items-center gap-2">
           {isAdmin && <AdminBadge />}
-          <span
-            className="max-w-[7.5rem] truncate rounded-md bg-surface px-2 py-1 text-xs font-semibold text-textMuted"
+          <button
+            type="button"
+            onClick={() => {
+              if (pathname === '/mypage') return;
+              startRouteLoading();
+              router.push('/mypage');
+            }}
+            className="max-w-[7.5rem] truncate rounded-md bg-surface px-2 py-1 text-xs font-semibold text-textMuted hover:bg-borderColor/40"
             title={username}
+            aria-label={isAdmin ? '유저테이블 관리로 이동' : '마이페이지로 이동'}
           >
             {username}
-          </span>
+          </button>
           <button
             type="button"
             onClick={() => signOut({ callbackUrl: '/login' })}

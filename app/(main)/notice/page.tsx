@@ -14,7 +14,7 @@ export default async function NoticePage() {
       </div>
 
       {isAdmin && (
-        <form action={createNoticeAction} className="space-y-2 rounded-2xl border border-borderColor bg-white p-4">
+        <form action={createNoticeAction} className="space-y-3 rounded-2xl border border-borderColor bg-white p-4">
           <input
             name="title"
             className="w-full rounded-lg border border-borderColor px-3 py-2 text-sm outline-none focus:border-primary"
@@ -28,13 +28,29 @@ export default async function NoticePage() {
             placeholder="공지 내용을 입력하세요."
             required
           />
-          <label className="inline-flex items-center gap-2 text-xs font-semibold text-textMuted">
-            <input type="checkbox" name="isPinned" />
-            상단 고정 공지
+          <label className="block text-xs font-semibold text-textMuted">
+            공지 유형
+            <select
+              name="noticeType"
+              defaultValue="GENERAL"
+              className="mt-1 w-full rounded-lg border border-borderColor px-3 py-2 text-sm outline-none focus:border-primary"
+            >
+              <option value="GENERAL">일반 공지</option>
+              <option value="EMERGENCY">팝업 공지 (일반 유저 팝업)</option>
+            </select>
           </label>
-          <button type="submit" className="rounded-lg bg-primary px-3 py-2 text-sm font-bold text-white hover:bg-primaryHover">
-            공지 등록
-          </button>
+          <div className="flex flex-wrap items-center gap-3 pt-1">
+            <label className="inline-flex items-center gap-2 text-xs font-semibold text-textMuted">
+              <input type="checkbox" name="isPinned" />
+              상단 고정 공지 (기존 고정은 자동 해제)
+            </label>
+            <button
+              type="submit"
+              className="rounded-lg bg-primary px-3 py-2 text-sm font-bold text-white hover:bg-primaryHover"
+            >
+              공지 등록
+            </button>
+          </div>
         </form>
       )}
 

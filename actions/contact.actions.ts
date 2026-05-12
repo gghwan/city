@@ -12,6 +12,10 @@ import {
 } from '@/lib/validations/contact.schema';
 import { getMockState } from '@/lib/mock-db';
 import type { EmergencyContactItem } from '@/types';
+import { isSupabaseConfigured, supabaseAdmin } from '@/lib/supabase';
+import type { PostgrestError } from '@supabase/supabase-js';
+
+const useMockDb = process.env.USE_MOCK_DB === 'true';
 
 function mapToClient(record: {
   id: number;
@@ -33,7 +37,61 @@ function mapToClient(record: {
   };
 }
 
+type SupabaseContactRow = {
+  id: number;
+  name: string;
+  role: string;
+  phone: string;
+  note: string | null;
+  sortOrder: number;
+  createdAt: string;
+};
+
+function mapSupabaseToClient(record: SupabaseContactRow): EmergencyContactItem {
+  return {
+    id: record.id,
+    name: record.name,
+    role: record.role,
+    phone: record.phone,
+    note: record.note,
+    sortOrder: record.sortOrder,
+    createdAt: record.createdAt,
+  };
+}
+
+function toReadableSupabaseError(error: PostgrestError | null) {
+  if (!error) return '알 수 없는 Supabase 오류';
+  const code = error.code ? `[${error.code}] ` : '';
+  return `${code}${error.message}`;
+}
+
+function toReadableUnknownError(error: unknown) {
+  if (error instanceof AppError) return error.message;
+  if (error instanceof Error) return `${error.name}: ${error.message}`;
+  return String(error);
+}
+
 export async function getContacts(): Promise<EmergencyContactItem[]> {
+  let supabaseReadError: string | null = null;
+
+  if (isSupabaseConfigured && supabaseAdmin) {
+    try {
+      const { data, error } = await supabaseAdmin
+        .from('EmergencyContact')
+        .select('id,name,role,phone,note,sortOrder,createdAt')
+        .order('sortOrder', { ascending: true })
+        .order('id', { ascending: true });
+
+      if (error) {
+        supabaseReadError = toReadableSupabaseError(error);
+      } else {
+        return (data as SupabaseContactRow[]).map(mapSupabaseToClient);
+      }
+    } catch (error) {
+      supabaseReadError = toReadableUnknownError(error);
+    }
+  }
+
   if (isDatabaseConfigured) {
     try {
       const contacts = await prisma.emergencyContact.findMany({
@@ -45,6 +103,15 @@ export async function getContacts(): Promise<EmergencyContactItem[]> {
     }
   }
 
+  if (!useMockDb) {
+    const detail = supabaseReadError ? ` Supabase 오류: ${supabaseReadError}` : '';
+    throw new AppError('E009', `실제 DB 연결 정보가 없어 연락처를 읽을 수 없습니다.${detail}`, 503);
+  }
+
+  if (supabaseReadError) {
+    console.warn(`[getContacts] Supabase 조회 실패, mock으로 폴백합니다: ${supabaseReadError}`);
+  }
+
   const state = getMockState();
   return state.contacts.slice().sort((a, b) => a.sortOrder - b.sortOrder).map((item) => ({ ...item }));
 }
@@ -54,6 +121,28 @@ export async function createContact(dto: CreateContactDto): Promise<EmergencyCon
     const parsed = createContactSchema.safeParse(dto);
     if (!parsed.success) {
       throw new AppError('E007', '입력값을 확인해주세요.', 422);
+    }
+
+    if (isSupabaseConfigured && supabaseAdmin) {
+      const now = new Date().toISOString();
+      const { data, error } = await supabaseAdmin
+        .from('EmergencyContact')
+        .insert({
+          name: parsed.data.name,
+          role: parsed.data.role,
+          phone: parsed.data.phone,
+          note: parsed.data.note ?? null,
+          sortOrder: parsed.data.sortOrder ?? 0,
+          createdBy: Number.isFinite(Number(session.user.id)) ? Number(session.user.id) : null,
+          createdAt: now,
+          updatedAt: now,
+        })
+        .select('id,name,role,phone,note,sortOrder,createdAt')
+        .single();
+      if (error || !data) {
+        throw new AppError('E009', `연락처 저장에 실패했습니다. ${toReadableSupabaseError(error)}`, 500);
+      }
+      return mapSupabaseToClient(data as SupabaseContactRow);
     }
 
     if (isDatabaseConfigured) {
@@ -72,6 +161,10 @@ export async function createContact(dto: CreateContactDto): Promise<EmergencyCon
       } catch {
         // fallback below
       }
+    }
+
+    if (!useMockDb) {
+      throw new AppError('E009', '실제 DB 연결 정보가 없어 연락처를 저장할 수 없습니다.', 503);
     }
 
     const state = getMockState();
@@ -97,6 +190,26 @@ export async function updateContact(id: number, dto: UpdateContactDto): Promise<
       throw new AppError('E007', '입력값을 확인해주세요.', 422);
     }
 
+    if (isSupabaseConfigured && supabaseAdmin) {
+      const now = new Date().toISOString();
+      const { data, error } = await supabaseAdmin
+        .from('EmergencyContact')
+        .update({
+          name: parsed.data.name,
+          role: parsed.data.role,
+          phone: parsed.data.phone,
+          note: parsed.data.note ?? null,
+          updatedAt: now,
+        })
+        .eq('id', id)
+        .select('id,name,role,phone,note,sortOrder,createdAt')
+        .single();
+      if (error || !data) {
+        throw new AppError('E009', `연락처 수정에 실패했습니다. ${toReadableSupabaseError(error)}`, 500);
+      }
+      return mapSupabaseToClient(data as SupabaseContactRow);
+    }
+
     if (isDatabaseConfigured) {
       try {
         const updated = await prisma.emergencyContact.update({
@@ -112,6 +225,10 @@ export async function updateContact(id: number, dto: UpdateContactDto): Promise<
       } catch {
         // fallback below
       }
+    }
+
+    if (!useMockDb) {
+      throw new AppError('E009', '실제 DB 연결 정보가 없어 연락처를 수정할 수 없습니다.', 503);
     }
 
     const state = getMockState();
@@ -130,6 +247,14 @@ export async function updateContact(id: number, dto: UpdateContactDto): Promise<
 
 export async function deleteContact(id: number): Promise<void> {
   await withAdminAction(async () => {
+    if (isSupabaseConfigured && supabaseAdmin) {
+      const { error } = await supabaseAdmin.from('EmergencyContact').delete().eq('id', id);
+      if (error) {
+        throw new AppError('E009', `연락처 삭제에 실패했습니다. ${toReadableSupabaseError(error)}`, 500);
+      }
+      return;
+    }
+
     if (isDatabaseConfigured) {
       try {
         await prisma.emergencyContact.delete({ where: { id } });
@@ -139,6 +264,10 @@ export async function deleteContact(id: number): Promise<void> {
       }
     }
 
+    if (!useMockDb) {
+      throw new AppError('E009', '실제 DB 연결 정보가 없어 연락처를 삭제할 수 없습니다.', 503);
+    }
+
     const state = getMockState();
     state.contacts = state.contacts.filter((item) => item.id !== id);
   });
@@ -146,6 +275,19 @@ export async function deleteContact(id: number): Promise<void> {
 
 export async function reorderContacts(orderedIds: number[]): Promise<void> {
   await withAdminAction(async () => {
+    if (isSupabaseConfigured && supabaseAdmin) {
+      const client = supabaseAdmin;
+      const updates = orderedIds.map((id, index) =>
+        client.from('EmergencyContact').update({ sortOrder: index + 1 }).eq('id', id),
+      );
+      const results = await Promise.all(updates);
+      const failed = results.find((result) => result.error);
+      if (failed?.error) {
+        throw new AppError('E009', `연락처 정렬 저장에 실패했습니다. ${toReadableSupabaseError(failed.error)}`, 500);
+      }
+      return;
+    }
+
     if (isDatabaseConfigured) {
       try {
         await Promise.all(
@@ -160,6 +302,10 @@ export async function reorderContacts(orderedIds: number[]): Promise<void> {
       } catch {
         // fallback below
       }
+    }
+
+    if (!useMockDb) {
+      throw new AppError('E009', '실제 DB 연결 정보가 없어 연락처 정렬을 저장할 수 없습니다.', 503);
     }
 
     const state = getMockState();

@@ -2,26 +2,55 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { Bell, FileText, Home, Map, MessageCircle, MoreHorizontal, PhoneCall, Smartphone, X } from 'lucide-react';
+import {
+  Bell,
+  CalendarDays,
+  FileText,
+  Home,
+  Map,
+  MessageCircle,
+  MoreHorizontal,
+  Smartphone,
+  UserRound,
+  X,
+} from 'lucide-react';
 import { NavigationLink } from '@/components/common/NavigationLink';
 
-const primaryNavItems = [
+const primaryNavItemsForAdmin = [
   { href: '/dashboard', label: '홈', icon: Home },
   { href: '/service', label: '봉사마련', icon: FileText },
   { href: '/map', label: '구역지도', icon: Map },
-  { href: '/notice', label: '공지', icon: Bell },
-];
+  { href: '/schedule', label: '일정', icon: CalendarDays },
+] as const;
 
-const moreNavItems = [
+const primaryNavItemsForUser = [
+  { href: '/dashboard', label: '홈', icon: Home },
+  { href: '/service', label: '봉사안내', icon: FileText },
+  { href: '/map', label: '구역지도', icon: Map },
+  { href: '/schedule', label: '일정', icon: CalendarDays },
+] as const;
+
+const moreNavItemsForAdmin = [
   { href: '/card', label: '호별카드', icon: Smartphone },
-  { href: '/emergency', label: '비상연락', icon: PhoneCall },
   { href: '/talk', label: '대화방법', icon: MessageCircle },
+  { href: '/notice', label: '공지', icon: Bell },
+  { href: '/mypage', label: '유저관리', icon: UserRound },
   { href: '/chat', label: 'AI도우미', icon: MessageCircle },
 ];
 
-export function BottomNav() {
+const moreNavItemsForUser = [
+  { href: '/card', label: '호별카드', icon: Smartphone },
+  { href: '/talk', label: '대화방법', icon: MessageCircle },
+  { href: '/notice', label: '공지', icon: Bell },
+  { href: '/mypage', label: '마이페이지', icon: UserRound },
+  { href: '/chat', label: 'AI도우미', icon: MessageCircle },
+];
+
+export function BottomNav({ isAdmin }: { isAdmin: boolean }) {
   const pathname = usePathname();
   const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const primaryNavItems = isAdmin ? primaryNavItemsForAdmin : primaryNavItemsForUser;
+  const moreNavItems = isAdmin ? moreNavItemsForAdmin : moreNavItemsForUser;
 
   useEffect(() => {
     setIsMoreOpen(false);
@@ -52,7 +81,7 @@ export function BottomNav() {
                 </button>
               </div>
 
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
                 {moreNavItems.map((item) => {
                   const active = pathname === item.href;
                   return (

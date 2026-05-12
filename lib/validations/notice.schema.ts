@@ -4,6 +4,7 @@ export const createNoticeSchema = z.object({
   title: z.string().min(1, '제목을 입력해주세요.').max(150),
   content: z.string().min(1, '내용을 입력해주세요.').max(5000),
   isPinned: z.boolean().optional().default(false),
+  noticeType: z.enum(['GENERAL', 'EMERGENCY']).optional().default('GENERAL'),
 });
 
 export const updateNoticeSchema = createNoticeSchema.partial().extend({

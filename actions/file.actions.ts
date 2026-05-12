@@ -3,14 +3,15 @@
 import { revalidatePath } from 'next/cache';
 import { FileType } from '@prisma/client';
 import { prisma, isDatabaseConfigured } from '@/lib/prisma';
-import { withAdminAction } from '@/lib/with-admin';
+import { requireSession, withAdminAction } from '@/lib/with-admin';
 import { AppError } from '@/lib/errors';
 import { createFileSchema, updateFileSchema, type CreateFileDto, type UpdateFileDto } from '@/lib/validations/file.schema';
 import { getMockState } from '@/lib/mock-db';
 import type { FileItem } from '@/types';
 import { isSupabaseConfigured, storageBucket, supabaseAdmin } from '@/lib/supabase';
-import { ALLOWED_UPLOAD_EXTENSIONS, MAX_UPLOAD_SIZE_BYTES } from '@/lib/constants';
+import { ALLOWED_UPLOAD_EXTENSIONS, DEFAULT_LINKS, MAX_UPLOAD_SIZE_BYTES } from '@/lib/constants';
 import { uploadRateLimiter } from '@/lib/rate-limiter';
+import type { PostgrestError } from '@supabase/supabase-js';
 
 function fileTypeToPrisma(type: 'service' | 'emergency' | 'talk') {
   if (type === 'service') return FileType.SERVICE;
@@ -32,7 +33,8 @@ function decodeJwtPayload(token: string): Record<string, unknown> | null {
 }
 
 function getSupabaseKeyRole() {
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_SECRET_KEY;
+  const key =
+    process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || process.env.SUPABASE_SECRET_KEY?.trim();
   if (!key) return null;
 
   if (key.startsWith('sb_publishable_')) {
@@ -49,6 +51,7 @@ function getSupabaseKeyRole() {
 }
 
 const allowedExtensionSet = new Set(ALLOWED_UPLOAD_EXTENSIONS);
+const useMockDb = process.env.USE_MOCK_DB === 'true';
 
 const allowedMimeTypeSet = new Set([
   'application/pdf',
@@ -126,7 +129,7 @@ function mapToClient(record: {
   sizeBytes: bigint | number | null;
   createdAt: Date | string;
 }): FileItem {
-  return {
+  const item: FileItem = {
     id: record.id,
     type: record.type,
     name: record.name,
@@ -141,6 +144,70 @@ function mapToClient(record: {
         : null,
     createdAt: record.createdAt instanceof Date ? record.createdAt.toISOString() : record.createdAt,
   };
+  return normalizeLegacyFileItem(item);
+}
+
+type SupabaseFileRow = {
+  id: number;
+  type: FileType;
+  name: string;
+  description: string | null;
+  storagePath: string;
+  mimeType: string;
+  sizeBytes: number | string | null;
+  createdAt: string;
+};
+
+function mapSupabaseRowToClient(row: SupabaseFileRow): FileItem {
+  return normalizeLegacyFileItem({
+    id: row.id,
+    type: row.type,
+    name: row.name,
+    description: row.description ?? null,
+    storagePath: row.storagePath,
+    mimeType: row.mimeType,
+    sizeBytes:
+      typeof row.sizeBytes === 'number' ? row.sizeBytes : typeof row.sizeBytes === 'string' ? Number(row.sizeBytes) : null,
+    createdAt: row.createdAt,
+  });
+}
+
+function toReadableSupabaseError(error: PostgrestError | null) {
+  if (!error) return '알 수 없는 Supabase 오류';
+  const code = error.code ? `[${error.code}] ` : '';
+  return `${code}${error.message}`;
+}
+
+function toReadableUnknownError(error: unknown) {
+  if (error instanceof AppError) return error.message;
+  if (error instanceof Error) return `${error.name}: ${error.message}`;
+  return String(error);
+}
+
+function normalizeLegacyFileItem(file: FileItem): FileItem {
+  const isLegacyMapLink =
+    file.storagePath === DEFAULT_LINKS.map ||
+    file.storagePath.includes('google.com/maps') ||
+    file.storagePath.includes('maps.google.com');
+  if (!isLegacyMapLink) return file;
+
+  if (file.type === 'SERVICE') {
+    return {
+      ...file,
+      storagePath: '/documents/service-plan-sample.pdf',
+      mimeType: 'application/pdf',
+    };
+  }
+
+  if (file.type === 'EMERGENCY') {
+    return {
+      ...file,
+      storagePath: '/documents/emergency-guide-sample.pdf',
+      mimeType: 'application/pdf',
+    };
+  }
+
+  return file;
 }
 
 export async function getSignedUrl(storagePath: string): Promise<string> {
@@ -197,6 +264,25 @@ export async function getSignedUrls(storagePaths: string[]): Promise<Record<stri
 
 export async function getFiles(type: 'service' | 'emergency' | 'talk'): Promise<FileItem[]> {
   const prismaType = fileTypeToPrisma(type);
+  let supabaseReadError: string | null = null;
+
+  if (isSupabaseConfigured && supabaseAdmin) {
+    try {
+      const { data, error } = await supabaseAdmin
+        .from('File')
+        .select('id,type,name,description,storagePath,mimeType,sizeBytes,createdAt')
+        .eq('type', prismaType)
+        .order('createdAt', { ascending: false });
+
+      if (error) {
+        supabaseReadError = toReadableSupabaseError(error);
+      } else {
+        return (data as SupabaseFileRow[]).map(mapSupabaseRowToClient);
+      }
+    } catch (error) {
+      supabaseReadError = toReadableUnknownError(error);
+    }
+  }
 
   if (isDatabaseConfigured) {
     try {
@@ -210,11 +296,74 @@ export async function getFiles(type: 'service' | 'emergency' | 'talk'): Promise<
     }
   }
 
+  if (!useMockDb) {
+    const detail = supabaseReadError ? ` Supabase 오류: ${supabaseReadError}` : '';
+    throw new AppError(
+      'E009',
+      `실제 DB 연결 정보가 없어 파일 목록을 읽을 수 없습니다. DATABASE_URL 또는 Supabase 키를 설정해주세요.${detail}`,
+      503,
+    );
+  }
+
+  if (supabaseReadError) {
+    console.warn(`[getFiles] Supabase 조회 실패, mock으로 폴백합니다: ${supabaseReadError}`);
+  }
+
   const state = getMockState();
   return state.files
     .filter((file) => file.type === prismaType)
     .sort((a, b) => b.id - a.id)
-    .map((item) => ({ ...item }));
+    .map((item) => normalizeLegacyFileItem({ ...item }));
+}
+
+export async function getFileById(id: number): Promise<FileItem | null> {
+  await requireSession();
+  if (!Number.isFinite(id)) return null;
+  let supabaseReadError: string | null = null;
+
+  if (isSupabaseConfigured && supabaseAdmin) {
+    try {
+      const { data, error } = await supabaseAdmin
+        .from('File')
+        .select('id,type,name,description,storagePath,mimeType,sizeBytes,createdAt')
+        .eq('id', id)
+        .maybeSingle();
+
+      if (error) {
+        supabaseReadError = toReadableSupabaseError(error);
+      } else {
+        return data ? mapSupabaseRowToClient(data as SupabaseFileRow) : null;
+      }
+    } catch (error) {
+      supabaseReadError = toReadableUnknownError(error);
+    }
+  }
+
+  if (isDatabaseConfigured) {
+    try {
+      const file = await prisma.file.findUnique({
+        where: { id },
+      });
+      if (file) {
+        return mapToClient(file);
+      }
+    } catch {
+      // fallback below
+    }
+  }
+
+  if (!useMockDb) {
+    const detail = supabaseReadError ? ` Supabase 오류: ${supabaseReadError}` : '';
+    throw new AppError('E009', `실제 DB 연결 정보가 없어 파일을 읽을 수 없습니다.${detail}`, 503);
+  }
+
+  if (supabaseReadError) {
+    console.warn(`[getFileById] Supabase 조회 실패, mock으로 폴백합니다: ${supabaseReadError}`);
+  }
+
+  const state = getMockState();
+  const file = state.files.find((item) => item.id === id);
+  return file ? normalizeLegacyFileItem({ ...file }) : null;
 }
 
 export async function createFile(dto: CreateFileDto): Promise<FileItem> {
@@ -222,6 +371,31 @@ export async function createFile(dto: CreateFileDto): Promise<FileItem> {
     const parsed = createFileSchema.safeParse(dto);
     if (!parsed.success) {
       throw new AppError('E007', '입력값을 확인해주세요.', 422);
+    }
+
+    if (isSupabaseConfigured && supabaseAdmin) {
+      const now = new Date().toISOString();
+      const { data, error } = await supabaseAdmin
+        .from('File')
+        .insert({
+          type: parsed.data.type,
+          name: parsed.data.name,
+          description: parsed.data.description ?? null,
+          storagePath: parsed.data.storagePath,
+          mimeType: parsed.data.mimeType,
+          sizeBytes: parsed.data.sizeBytes ?? null,
+          uploadedBy: Number.isFinite(Number(session.user.id)) ? Number(session.user.id) : null,
+          createdAt: now,
+          updatedAt: now,
+        })
+        .select('id,type,name,description,storagePath,mimeType,sizeBytes,createdAt')
+        .single();
+
+      if (error || !data) {
+        throw new AppError('E009', `파일 저장에 실패했습니다. ${toReadableSupabaseError(error)}`, 500);
+      }
+
+      return mapSupabaseRowToClient(data as SupabaseFileRow);
     }
 
     if (isDatabaseConfigured) {
@@ -239,6 +413,10 @@ export async function createFile(dto: CreateFileDto): Promise<FileItem> {
       } catch {
         // fallback below
       }
+    }
+
+    if (!useMockDb) {
+      throw new AppError('E009', '실제 DB 연결 정보가 없어 파일을 저장할 수 없습니다.', 503);
     }
 
     const state = getMockState();
@@ -265,6 +443,26 @@ export async function updateFile(id: number, dto: UpdateFileDto): Promise<FileIt
       throw new AppError('E007', '입력값을 확인해주세요.', 422);
     }
 
+    if (isSupabaseConfigured && supabaseAdmin) {
+      const now = new Date().toISOString();
+      const { data, error } = await supabaseAdmin
+        .from('File')
+        .update({
+          name: parsed.data.name,
+          description: parsed.data.description ?? null,
+          updatedAt: now,
+        })
+        .eq('id', id)
+        .select('id,type,name,description,storagePath,mimeType,sizeBytes,createdAt')
+        .single();
+
+      if (error || !data) {
+        throw new AppError('E009', `파일 수정에 실패했습니다. ${toReadableSupabaseError(error)}`, 500);
+      }
+
+      return mapSupabaseRowToClient(data as SupabaseFileRow);
+    }
+
     if (isDatabaseConfigured) {
       try {
         const updated = await prisma.file.update({
@@ -275,6 +473,10 @@ export async function updateFile(id: number, dto: UpdateFileDto): Promise<FileIt
       } catch {
         // fallback below
       }
+    }
+
+    if (!useMockDb) {
+      throw new AppError('E009', '실제 DB 연결 정보가 없어 파일을 수정할 수 없습니다.', 503);
     }
 
     const state = getMockState();
@@ -291,6 +493,30 @@ export async function updateFile(id: number, dto: UpdateFileDto): Promise<FileIt
 
 export async function deleteFile(id: number): Promise<void> {
   await withAdminAction(async () => {
+    if (isSupabaseConfigured && supabaseAdmin) {
+      const { data: target, error: findError } = await supabaseAdmin
+        .from('File')
+        .select('id,storagePath')
+        .eq('id', id)
+        .maybeSingle();
+      if (findError) {
+        throw new AppError('E009', `파일 조회에 실패했습니다. ${toReadableSupabaseError(findError)}`, 500);
+      }
+      if (!target) {
+        throw new AppError('E004', '파일을 찾을 수 없습니다.', 404);
+      }
+
+      const { error: deleteError } = await supabaseAdmin.from('File').delete().eq('id', id);
+      if (deleteError) {
+        throw new AppError('E009', `파일 삭제에 실패했습니다. ${toReadableSupabaseError(deleteError)}`, 500);
+      }
+
+      if (target.storagePath && !String(target.storagePath).startsWith('http')) {
+        await supabaseAdmin.storage.from(storageBucket).remove([String(target.storagePath)]);
+      }
+      return;
+    }
+
     if (isDatabaseConfigured) {
       try {
         const target = await prisma.file.findUnique({ where: { id } });
@@ -307,6 +533,10 @@ export async function deleteFile(id: number): Promise<void> {
       } catch (error) {
         if (error instanceof AppError) throw error;
       }
+    }
+
+    if (!useMockDb) {
+      throw new AppError('E009', '실제 DB 연결 정보가 없어 파일을 삭제할 수 없습니다.', 503);
     }
 
     const state = getMockState();

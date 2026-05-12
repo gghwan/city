@@ -9,6 +9,7 @@ import { getCachedServerSession } from '@/lib/session';
 export default async function TalkPage() {
   const [session, links, rawFiles] = await Promise.all([getCachedServerSession(), getLinks(), getFiles('talk')]);
   const isAdmin = session?.user.role === 'ADMIN';
+  const hasTalkLink = links.talk.url.trim().length > 0;
 
   const files = isAdmin
     ? await (async () => {
@@ -27,15 +28,17 @@ export default async function TalkPage() {
         <p className="text-xs text-textMuted">구역별 대화 방법 제안</p>
       </div>
 
-      <ExternalLinkSection
-        title="공유 링크"
-        description="외부 자료 링크가 있으면 바로 열 수 있습니다."
-        href={links.talk.url}
-        icon={Link2}
-        ctaLabel="링크 열기"
-        ctaClassName="bg-[#6b4ce6]"
-        updatedAt={links.talk.updatedAt}
-      />
+      {hasTalkLink ? (
+        <ExternalLinkSection
+          title="공유 링크"
+          description="외부 자료 링크가 있으면 바로 열 수 있습니다."
+          href={links.talk.url}
+          icon={Link2}
+          ctaLabel="링크 열기"
+          ctaClassName="bg-[#6b4ce6]"
+          updatedAt={links.talk.updatedAt}
+        />
+      ) : null}
 
       {isAdmin && (
         <form action={updateLinkAction} className="rounded-2xl border border-borderColor bg-white p-4">
