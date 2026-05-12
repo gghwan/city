@@ -1,14 +1,13 @@
-import { CalendarCheck2, ClipboardList, Clock3, ExternalLink, FileImage, FolderOpen, MapPin } from 'lucide-react';
+import { CalendarCheck2, Clock3, ExternalLink, FileImage, FolderOpen, MapPin } from 'lucide-react';
 import { getFiles } from '@/actions/file.actions';
-import { getMyReports } from '@/actions/report.actions';
 import { getMyScheduleApplications } from '@/actions/schedule.actions';
 import { createUserByAdminAction, deleteUserByAdminAction, getUsersForAdmin } from '@/actions/user.actions';
 import { EmptyState } from '@/components/common/EmptyState';
 import { NavigationLink } from '@/components/common/NavigationLink';
-import { formatBytes, formatDate, formatDateTime } from '@/lib/format';
+import { formatBytes, formatDate } from '@/lib/format';
 import { getCachedServerSession } from '@/lib/session';
 import { getSessionId, getSessionLabel } from '@/lib/schedule-utils';
-import type { FileItem, ServiceReportItem } from '@/types';
+import type { FileItem } from '@/types';
 
 function scheduleStatusLabel(status: 'pending' | 'assigned') {
   return status === 'assigned' ? '배정 완료' : '신청 대기';
@@ -16,14 +15,6 @@ function scheduleStatusLabel(status: 'pending' | 'assigned') {
 
 function scheduleStatusClass(status: 'pending' | 'assigned') {
   return status === 'assigned' ? 'bg-primary/15 text-primary' : 'bg-warning/15 text-warning';
-}
-
-function reportStatusLabel(status: ServiceReportItem['status']) {
-  return status === 'SUBMITTED' ? '제출완료' : '임시저장';
-}
-
-function reportStatusClass(status: ServiceReportItem['status']) {
-  return status === 'SUBMITTED' ? 'bg-success/15 text-success' : 'bg-warning/15 text-warning';
 }
 
 function fileCategoryLabel(type: FileItem['type']) {
@@ -118,9 +109,8 @@ export default async function MyPage() {
     );
   }
 
-  const [myApplications, myReports, serviceFiles, emergencyFiles, talkFiles] = await Promise.all([
+  const [myApplications, serviceFiles, emergencyFiles, talkFiles] = await Promise.all([
     getMyScheduleApplications(),
-    getMyReports(),
     getFiles('service'),
     getFiles('emergency'),
     getFiles('talk'),
@@ -132,15 +122,12 @@ export default async function MyPage() {
     <section className="space-y-4">
       <div>
         <h2 className="text-lg font-black text-textBase">마이페이지</h2>
-        <p className="text-xs text-textMuted">{session.user.username}님의 신청 일정, 봉사 보고, 공유 문서를 한눈에 확인할 수 있습니다.</p>
+        <p className="text-xs text-textMuted">{session.user.username}님의 신청 일정과 공유 문서를 한눈에 확인할 수 있습니다.</p>
       </div>
 
-      <article className="grid gap-2 rounded-2xl border border-borderColor bg-white p-4 text-xs text-textMuted sm:grid-cols-3">
+      <article className="grid gap-2 rounded-2xl border border-borderColor bg-white p-4 text-xs text-textMuted sm:grid-cols-2">
         <p>
           <span className="font-bold text-textBase">내 신청 일정</span> {myApplications.length}건
-        </p>
-        <p>
-          <span className="font-bold text-textBase">내 보고 내역</span> {myReports.length}건
         </p>
         <p>
           <span className="font-bold text-textBase">문서 미리보기</span> {documentPreviewItems.length}개
@@ -181,43 +168,6 @@ export default async function MyPage() {
                     className="inline-flex items-center gap-1 rounded-lg bg-white px-2.5 py-1 text-[11px] font-semibold text-textBase"
                   >
                     자세히 보기 <ExternalLink className="h-3.5 w-3.5" />
-                  </NavigationLink>
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
-      </section>
-
-      <section className="space-y-2 rounded-2xl border border-borderColor bg-white p-4">
-        <h3 className="inline-flex items-center gap-1 text-sm font-black text-textBase">
-          <ClipboardList className="h-4 w-4 text-success" /> 내가 제출한 봉사 보고
-        </h3>
-
-        {myReports.length === 0 ? (
-          <EmptyState message="아직 제출한 봉사 보고가 없습니다." />
-        ) : (
-          <div className="space-y-2">
-            {myReports.map((report) => (
-              <article key={report.id} className="rounded-xl border border-borderColor bg-surface p-3 text-xs">
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <p className="font-bold text-textBase">{report.reportDate}</p>
-                    <p className="mt-1 text-textMuted">
-                      {report.ministryType === 'CIRCUIT' ? '회중봉사/순회구 봉사' : '지하철 전시대 봉사'} · 수정 {formatDateTime(report.updatedAt)}
-                    </p>
-                  </div>
-                  <span className={`rounded-full px-2 py-1 text-[11px] font-bold ${reportStatusClass(report.status)}`}>
-                    {reportStatusLabel(report.status)}
-                  </span>
-                </div>
-
-                <div className="mt-2">
-                  <NavigationLink
-                    href={`/report?date=${report.reportDate}`}
-                    className="inline-flex rounded-lg bg-white px-2.5 py-1 text-[11px] font-semibold text-textBase"
-                  >
-                    보고서 열기/수정
                   </NavigationLink>
                 </div>
               </article>
